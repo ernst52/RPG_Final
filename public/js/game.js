@@ -540,20 +540,20 @@ function showLevelUpModal(newLevel) {
 
 async function refreshCharacter() {
     if (!currentCharacter) return;
-    
+
     try {
         const response = await fetch(`/api/character/${currentCharacter.char_id}`);
         const data = await response.json();
-        
+
         if (data.success) {
             currentCharacter = data.character;
-            displayCharacterDetails();
-            displayEquippedItems();
+            updateCharacterUI(); // <- use the new function here
         }
     } catch (error) {
         console.error('Error refreshing character:', error);
     }
 }
+
 
 function closeModals() {
     document.querySelectorAll('.modal').forEach(modal => {
@@ -580,6 +580,20 @@ async function handleLogout() {
         window.location.href = '/';
     }
 }
+
+async function updateCharacterUI() {
+    if (!currentCharacter) return;
+
+    // Update core info
+    displayCharacterDetails();
+
+    // Update equipped items
+    displayEquippedItems();
+
+    // Update available equipment (locks/unlocks, bonuses)
+    displayAvailableEquipment();
+}
+
 
 // ==========================================
 // KEYBOARD SHORTCUTS
