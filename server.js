@@ -84,6 +84,44 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+// API: Create Account
+app.post('/api/register', async (req, res) => {
+    const { username, email } = req.body;
+
+    if (!username || !email) {
+        return res.status(400).json({ success: false, error: 'Username and email are required' });
+    }
+
+    try {
+        // Check if username or email already exists
+        const [existing] = await pool.query(
+            'SELECT * FROM player WHERE username = ? OR email = ?',
+            [username, email]
+        );
+
+        if (existing.length > 0) {
+            return res.status(400).json({ success: false, error: 'Username or email already taken' });
+        }
+
+        // Insert new player
+        const [result] = await pool.query(
+            'INSERT INTO player (username, email) VALUES (?, ?)',
+            [username, email]
+        );
+
+        const player = { player_id: result.insertId, username, email };
+        req.session.playerId = player.player_id;
+        req.session.username = player.username;
+
+        console.log(`✨ NEW PLAYER REGISTERED: ID ${player.player_id}`);
+        res.json({ success: true, player });
+    } catch (error) {
+        console.error('❌ REGISTER ERROR:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+
 // API: Get player's characters
 app.get('/api/characters', async (req, res) => {
     if (!req.session.playerId) {

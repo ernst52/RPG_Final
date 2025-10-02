@@ -1,76 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Login - Soyjak Party</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body class="login-page">
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="login-page">
     <div class="login-container">
-        <div class="login-card">
-            <div class="login-header">
-                <h1 class="glitch-text">Soyjak Party</h1>
-                <div class="subtitle">Enter the Matrix</div>
-            </div>
-
-            <form class="login-form" id="loginForm">
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" name="username" required>
-                    <div class="input-border"></div>
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" required>
-                    <div class="input-border"></div>
-                </div>
-                <button class="btn-primary" type="submit">Enter Game</button>
-            </form>
-            <div class="login-footer">
-                <div class="ascii-art">
-                    ░░░░░░░░░░░░░░░░░░░░
-                    <br>Welcome, Chummer!
-                </div>
-            </div>
+      <div class="login-card">
+        <div class="login-header">
+          <h1 class="glitch-text">Soyjak Party</h1>
+          <div class="subtitle">Enter the Matrix</div>
         </div>
+
+        <form class="login-form" id="loginForm">
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" required />
+            <div class="input-border"></div>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" required />
+            <div class="input-border"></div>
+          </div>
+          <button class="btn-primary" type="submit">Login</button>
+          <button class="btn-secondary" id="registerBtn" type="button">
+            Create Account
+          </button>
+        </form>
+        <div class="login-footer">
+          <div class="ascii-art">
+            ░░░░░░░░░░░░░░░░░░░░
+            <br />Welcome, Chummer!
+          </div>
+        </div>
+      </div>
     </div>
 
     <div id="loginNotification" class="notification"></div>
 
     <script>
-        const form = document.getElementById('loginForm');
-        const notification = document.getElementById('loginNotification');
+      const form = document.getElementById("loginForm");
+      const notification = document.getElementById("loginNotification");
+      const registerBtn = document.getElementById("registerBtn");
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(form);
-            const username = formData.get('username');
-            const email = formData.get('email');
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const username = formData.get("username");
+        const email = formData.get("email");
 
-            try {
-                const res = await fetch('/api/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, email })
-                });
-                const data = await res.json();
+        try {
+          const res = await fetch("/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email }),
+          });
+          const data = await res.json();
 
-                if (data.success) {
-                    window.location.href = '/game';
-                } else {
-                    notification.textContent = data.error || 'Login failed';
-                    notification.classList.add('show', 'error');
-                    setTimeout(() => notification.classList.remove('show'), 3000);
-                }
-            } catch {
-                notification.textContent = 'Connection error';
-                notification.classList.add('show', 'error');
-                setTimeout(() => notification.classList.remove('show'), 3000);
-            }
-        });
+          if (data.success) {
+            window.location.href = "/game";
+          } else {
+            notification.textContent = data.error || "Login failed";
+            notification.classList.add("show", "error");
+            setTimeout(() => notification.classList.remove("show"), 3000);
+          }
+        } catch {
+          notification.textContent = "Connection error";
+          notification.classList.add("show", "error");
+          setTimeout(() => notification.classList.remove("show"), 3000);
+        }
+      });
+
+      registerBtn.addEventListener("click", async () => {
+        const formData = new FormData(form);
+        const username = formData.get("username");
+        const email = formData.get("email");
+
+        try {
+          const res = await fetch("/api/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email }),
+          });
+          const data = await res.json();
+
+          if (data.success) {
+            window.location.href = "/game";
+          } else {
+            notification.textContent = data.error || "Registration failed";
+            notification.classList.add("show", "error");
+            setTimeout(() => notification.classList.remove("show"), 3000);
+          }
+        } catch {
+          notification.textContent = "Connection error";
+          notification.classList.add("show", "error");
+          setTimeout(() => notification.classList.remove("show"), 3000);
+        }
+      });
     </script>
 
     <div class="glitch-overlay"></div>
     <div class="scan-line"></div>
-</body>
+  </body>
 </html>
