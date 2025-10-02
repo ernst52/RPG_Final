@@ -55,7 +55,6 @@ app.post('/api/login', async (req, res) => {
     console.log(`🔐 LOGIN ATTEMPT: ${username} (${email})`);
     
     try {
-        // Check if player exists
         const [players] = await pool.query(
             'SELECT * FROM player WHERE username = ? OR email = ?',
             [username, email]
@@ -67,7 +66,6 @@ app.post('/api/login', async (req, res) => {
             player = players[0];
             console.log(`✅ EXISTING PLAYER FOUND: ID ${player.player_id}`);
         } else {
-            // Create new player
             const [result] = await pool.query(
                 'INSERT INTO player (username, email) VALUES (?, ?)',
                 [username, email]
@@ -123,7 +121,6 @@ app.get('/api/character/:id', async (req, res) => {
     console.log(`🎯 FETCHING DETAILS FOR CHARACTER ${charId}`);
     
     try {
-        // Get character info
         const [characters] = await pool.query(`
             SELECT 
                 c.*,
@@ -143,7 +140,6 @@ app.get('/api/character/:id', async (req, res) => {
         
         const character = characters[0];
         
-        // Get character stats
         const [stats] = await pool.query(`
             SELECT s.stat_name, cs.value
             FROM characterstats cs
@@ -156,7 +152,6 @@ app.get('/api/character/:id', async (req, res) => {
             return acc;
         }, {});
         
-        // Get equipped items
         const [equipment] = await pool.query(`
             SELECT 
                 e.*,
@@ -207,7 +202,6 @@ app.post('/api/equip', async (req, res) => {
     console.log(`⚔️ EQUIPPING ITEM ${itemId} TO CHARACTER ${charId}`);
     
     try {
-        // Get slot type for the item
         const [items] = await pool.query(
             'SELECT slot_type_id FROM equipment WHERE item_id = ?',
             [itemId]
@@ -219,7 +213,6 @@ app.post('/api/equip', async (req, res) => {
         
         const slotTypeId = items[0].slot_type_id;
         
-        // Try to equip (triggers will validate)
         await pool.query(`
             INSERT INTO characterequipment (char_id, item_id, slot_type_id)
             VALUES (?, ?, ?)
@@ -231,7 +224,6 @@ app.post('/api/equip', async (req, res) => {
     } catch (error) {
         console.error('❌ EQUIP ERROR:', error);
         
-        // Parse MySQL error messages for user-friendly response
         let errorMessage = error.message;
         if (error.message.includes('too low to equip')) {
             errorMessage = 'Your level is too low to equip this item!';
@@ -270,7 +262,6 @@ app.post('/api/addxp', async (req, res) => {
     console.log(`⭐ ADDING ${amount} XP TO CHARACTER ${charId}`);
     
     try {
-        // Get current character data
         const [characters] = await pool.query(
             'SELECT xp, level_id FROM charactertable WHERE char_id = ?',
             [charId]
@@ -284,7 +275,6 @@ app.post('/api/addxp', async (req, res) => {
         const currentLevelId = characters[0].level_id;
         const newXp = currentXp + amount;
         
-        // Check if level up is possible
         const [nextLevel] = await pool.query(
             'SELECT level_id, level_num, xp_required FROM leveltable WHERE level_id > ? ORDER BY level_id LIMIT 1',
             [currentLevelId]
@@ -299,7 +289,6 @@ app.post('/api/addxp', async (req, res) => {
             console.log(`🎉 LEVEL UP! Character reached level ${nextLevel[0].level_num}`);
         }
         
-        // Update character
         await pool.query(
             'UPDATE charactertable SET xp = ?, level_id = ? WHERE char_id = ?',
             [newXp, newLevelId, charId]
@@ -314,6 +303,56 @@ app.post('/api/addxp', async (req, res) => {
         });
     } catch (error) {
         console.error('❌ ADD XP ERROR:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// API: Reduce XP from character
+app.post('/api/reducexp', async (req, res) => {
+    const { charId, amount } = req.body;
+
+    console.log(`⬇️ REDUCING ${amount} XP FROM CHARACTER ${charId}`);
+
+    try {
+        const [characters] = await pool.query(
+            'SELECT xp, level_id FROM charactertable WHERE char_id = ?',
+            [charId]
+        );
+
+        if (characters.length === 0) {
+            return res.status(404).json({ success: false, error: 'Character not found' });
+        }
+
+        const currentXp = characters[0].xp;
+        const currentLevelId = characters[0].level_id;
+        let newXp = currentXp - amount;
+        if (newXp < 0) newXp = 0;
+
+        let newLevelId = currentLevelId;
+
+        // Check if we need to downgrade level
+        const [levelRow] = await pool.query(
+            'SELECT level_id, level_num, xp_required FROM leveltable WHERE xp_required <= ? ORDER BY level_id DESC LIMIT 1',
+            [newXp]
+        );
+
+        if (levelRow.length > 0) {
+            newLevelId = levelRow[0].level_id;
+        }
+
+        await pool.query(
+            'UPDATE charactertable SET xp = ?, level_id = ? WHERE char_id = ?',
+            [newXp, newLevelId, charId]
+        );
+
+        console.log(`✅ XP REDUCED: ${currentXp} -> ${newXp}`);
+        res.json({
+            success: true,
+            newXp,
+            newLevel: newLevelId
+        });
+    } catch (error) {
+        console.error('❌ REDUCE XP ERROR:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });

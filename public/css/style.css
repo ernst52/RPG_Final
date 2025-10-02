@@ -291,6 +291,26 @@ body {
     transform: scale(1.1);
 }
 
+.btn-reduce {
+    width: 100%;
+    margin-top: 1rem;
+    background: linear-gradient(45deg, var(--accent-red), #cc0033);
+    color: var(--text-bright);
+    border: none;
+    font-weight: bold;
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+    0%, 100% { box-shadow: 0 0 10px var(--accent-red); }
+    50% { box-shadow: 0 0 30px var(--accent-red); }
+}
+
+.btn-reduce:hover {
+    transform: scale(1.1);
+}
+
+
 /* ==========================================
    FLOATING WOJAKS
    ========================================== */

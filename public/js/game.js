@@ -33,6 +33,9 @@ function setupEventListeners() {
     
     // Add XP button
     document.getElementById('addXPBtn')?.addEventListener('click', handleAddXP);
+
+    // 👇 NEW Reduce XP button
+    document.getElementById('reduceXPBtn')?.addEventListener('click', handleReduceXP);
     
     // Modal close buttons
     document.querySelectorAll('.modal-close').forEach(btn => {
@@ -477,6 +480,40 @@ async function handleAddXP() {
         }
     } catch (error) {
         console.error('Error adding XP:', error);
+        showNotification('Connection error!', 'error');
+    } finally {
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        }, 1000);
+    }
+}
+
+async function handleReduceXP() {
+    const btn = document.getElementById('reduceXPBtn');
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+
+    try {
+        const response = await fetch('/api/reducexp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                charId: currentCharacter.char_id,
+                amount: 50
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            showNotification('-50 XP lost!', 'error');
+            await refreshCharacter();
+        } else {
+            showNotification(data.error || 'Failed to reduce XP!', 'error');
+        }
+    } catch (error) {
+        console.error('Error reducing XP:', error);
         showNotification('Connection error!', 'error');
     } finally {
         setTimeout(() => {
