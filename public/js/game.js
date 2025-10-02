@@ -188,12 +188,26 @@ function displayCharacterDetails() {
     displayStats();
 }
 
+function calculateTotalStats() {
+    const baseStats = { ...currentCharacter.stats };
+    (currentCharacter.equipment || []).forEach(item => {
+        if (!item.stat_bonus) return;
+        try {
+            const bonuses = JSON.parse(item.stat_bonus);
+            for (const [stat, value] of Object.entries(bonuses)) {
+                baseStats[stat] = (baseStats[stat] || 0) + value;
+            }
+        } catch {}
+    });
+    return baseStats;
+}
+
 function displayStats() {
     const statsContainer = document.getElementById('statsContainer');
     statsContainer.innerHTML = '';
-    
-    const stats = currentCharacter.stats || {};
-    
+
+    const stats = calculateTotalStats();
+
     for (const [statName, value] of Object.entries(stats)) {
         const statItem = document.createElement('div');
         statItem.className = 'stat-item';
@@ -204,6 +218,7 @@ function displayStats() {
         statsContainer.appendChild(statItem);
     }
 }
+
 
 // ==========================================
 // EQUIPMENT LOADING
