@@ -122,39 +122,111 @@ app.post('/api/register', async (req, res) => {
 });
 
 
-// API: Get player's characters
 app.get('/api/characters', async (req, res) => {
     if (!req.session.playerId) {
         return res.status(401).json({ error: 'Not authenticated' });
     }
     
-    console.log(`📋 FETCHING CHARACTERS FOR PLAYER ${req.session.playerId}`);
+    console.log(`📋 FETCHING CHARACTER TEMPLATES FOR PLAYER ${req.session.playerId}`);
     
     try {
-        const [characters] = await pool.query(`
+        // Get all character templates with player's progress
+        const [templates] = await pool.query(`
             SELECT 
-                c.*,
+                ct.template_id,
+                ct.name,
+                ct.class_id,
+                ct.description,
                 cl.class_name,
+                c.char_id,
+                c.level_id,
+                c.xp,
                 l.level_num,
-                l.xp_required as xp_for_next_level
-            FROM charactertable c
-            JOIN classtable cl ON c.class_id = cl.class_id
-            JOIN leveltable l ON c.level_id = l.level_id
-            WHERE c.player_id = ? AND c.is_active = 1
-            ORDER BY c.char_id
+                l.xp_required AS xp_for_next_level,
+                CASE WHEN c.char_id IS NOT NULL THEN 1 ELSE 0 END as is_owned
+            FROM character_template ct
+            JOIN classtable cl ON ct.class_id = cl.class_id
+            LEFT JOIN charactertable c ON ct.template_id = c.template_id AND c.player_id = ?
+            LEFT JOIN leveltable l ON c.level_id = l.level_id
+            WHERE ct.is_active = 1
+            ORDER BY ct.template_id
         `, [req.session.playerId]);
-        
-        console.log(`✅ FOUND ${characters.length} CHARACTERS`);
-        res.json({ success: true, characters });
+
+        console.log(`✅ FOUND ${templates.length} CHARACTER TEMPLATES`);
+        res.json({ success: true, characters: templates });
     } catch (error) {
-        console.error('❌ ERROR FETCHING CHARACTERS:', error);
+        console.error("❌ ERROR FETCHING TEMPLATES:", error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-// API: Get character details
+// API: Select/Create character instance
+app.post('/api/character/select', async (req, res) => {
+    const { templateId } = req.body;
+    
+    if (!req.session.playerId) {
+        return res.status(401).json({ error: 'Not authenticated' });
+    }
+    
+    console.log(`🎯 SELECTING TEMPLATE ${templateId} FOR PLAYER ${req.session.playerId}`);
+    
+    try {
+        // Check if player already has this character
+        const [existing] = await pool.query(
+            'SELECT char_id FROM charactertable WHERE player_id = ? AND template_id = ?',
+            [req.session.playerId, templateId]
+        );
+        
+        let charId;
+        
+        if (existing.length > 0) {
+            // Player already has this character
+            charId = existing[0].char_id;
+            console.log(`✅ PLAYER ALREADY HAS CHARACTER ${charId}`);
+        } else {
+            // Create new character instance for this player
+            const [template] = await pool.query(
+                'SELECT name, class_id FROM character_template WHERE template_id = ?',
+                [templateId]
+            );
+            
+            if (template.length === 0) {
+                return res.status(404).json({ error: 'Template not found' });
+            }
+            
+            // Insert new character instance
+            const [result] = await pool.query(`
+                INSERT INTO charactertable (name, player_id, template_id, class_id, level_id, xp)
+                VALUES (?, ?, ?, ?, 1, 0)
+            `, [template[0].name, req.session.playerId, templateId, template[0].class_id]);
+            
+            charId = result.insertId;
+            
+            // Copy base stats from template
+            await pool.query(`
+                INSERT INTO characterstats (char_id, stat_id, value)
+                SELECT ?, stat_id, base_value
+                FROM template_base_stats
+                WHERE template_id = ?
+            `, [charId, templateId]);
+            
+            console.log(`✨ NEW CHARACTER INSTANCE CREATED: ${charId}`);
+        }
+        
+        res.json({ success: true, charId });
+    } catch (error) {
+        console.error('❌ SELECT CHARACTER ERROR:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// API: Get character details (unchanged, but now works with instances)
 app.get('/api/character/:id', async (req, res) => {
     const charId = req.params.id;
+    
+    if (!req.session.playerId) {
+        return res.status(401).json({ error: 'Not authenticated' });
+    }
     
     console.log(`🎯 FETCHING DETAILS FOR CHARACTER ${charId}`);
     
@@ -162,18 +234,20 @@ app.get('/api/character/:id', async (req, res) => {
         const [characters] = await pool.query(`
             SELECT 
                 c.*,
+                ct.name as template_name,
                 cl.class_name,
                 cl.description as class_description,
                 l.level_num,
                 l.xp_required as xp_for_next_level
             FROM charactertable c
+            JOIN character_template ct ON c.template_id = ct.template_id
             JOIN classtable cl ON c.class_id = cl.class_id
             JOIN leveltable l ON c.level_id = l.level_id
             WHERE c.char_id = ? AND c.player_id = ?
         `, [charId, req.session.playerId]);
         
         if (characters.length === 0) {
-            return res.status(404).json({ error: 'Character not found' });
+            return res.status(404).json({ error: 'Character not found or not owned' });
         }
         
         const character = characters[0];

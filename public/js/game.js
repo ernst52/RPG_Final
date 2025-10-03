@@ -85,7 +85,7 @@ function displayCharacters(characters) {
     container.innerHTML = '';
     
     if (characters.length === 0) {
-        container.innerHTML = '<p style="text-align: center; color: var(--text-dim); font-size: 1.5rem;">No characters found. Create one in the database!</p>';
+        container.innerHTML = '<p style="text-align: center; color: var(--text-dim); font-size: 1.5rem;">No characters available!</p>';
         return;
     }
     
@@ -98,22 +98,47 @@ function displayCharacters(characters) {
 function createCharacterCard(char) {
     const card = document.createElement('div');
     card.className = 'character-card';
-    card.onclick = () => selectCharacter(char.char_id);
+    
+    // If player owns this character, show their progress
+    // If not, show it's available to select
+    const isOwned = char.is_owned === 1;
+    
+    card.onclick = () => {
+        if (isOwned) {
+            selectCharacter(char.char_id);
+        } else {
+            selectNewCharacter(char.template_id);
+        }
+    };
     
     const initial = char.name.charAt(0).toUpperCase();
+    
+    let levelInfo;
+    if (isOwned) {
+        levelInfo = `
+            <div class="character-card-level">
+                <span class="level-badge">LEVEL ${char.level_num}</span>
+                <span class="xp-badge">${char.xp} XP</span>
+            </div>
+        `;
+    } else {
+        levelInfo = `
+            <div class="character-card-level">
+                <span class="level-badge" style="background: var(--primary-blue);">AVAILABLE</span>
+            </div>
+        `;
+    }
     
     card.innerHTML = `
         <div class="character-card-portrait" data-initial="${initial}"></div>
         <div class="character-card-name">${char.name}</div>
         <div class="character-card-class">${char.class_name}</div>
-        <div class="character-card-level">
-            <span class="level-badge">LEVEL ${char.level_num}</span>
-            <span class="xp-badge">${char.xp} XP</span>
-        </div>
+        ${levelInfo}
     `;
     
     return card;
 }
+
 
 // ==========================================
 // CHARACTER SELECTION
@@ -137,6 +162,29 @@ async function selectCharacter(charId) {
     } catch (error) {
         console.error('Error selecting character:', error);
         showNotification('Failed to load character!', 'error');
+    }
+}
+
+async function selectNewCharacter(templateId) {
+    try {
+        const response = await fetch('/api/character/select', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ templateId })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('Character created!', 'success');
+            // Now select the newly created character
+            await selectCharacter(data.charId);
+        } else {
+            showNotification(data.error || 'Failed to create character!', 'error');
+        }
+    } catch (error) {
+        console.error('Error selecting character:', error);
+        showNotification('Connection error!', 'error');
     }
 }
 
