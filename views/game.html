@@ -128,6 +128,25 @@
         </div>
     </div>
 
+    <div id="deleteConfirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="deleteModalTitle">CONFIRM RESET</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Permanently reset the character <strong id="deleteCharName"></strong>?</p>
+                <p style="color: var(--text-dim); margin-top: 1rem;">
+                    All progress, level, and XP will be lost. This action is irreversible and cannot be undone.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelDeleteBtn" class="btn-secondary">CANCEL</button>
+                <button id="confirmDeleteBtn" class="btn-danger">RESET CHARACTER</button>
+            </div>
+        </div>
+    </div>
+
     <!-- NOTIFICATION -->
     <div id="notification" class="notification"></div>
 

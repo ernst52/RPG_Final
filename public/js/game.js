@@ -60,6 +60,45 @@ function setupEventListeners() {
     });
 }
 
+
+const confirmBtn = document.getElementById('confirmDeleteBtn');
+const cancelBtn = document.getElementById('cancelDeleteBtn');
+const deleteModal = document.getElementById('deleteConfirmModal');
+
+// Handle the final confirmation click
+confirmBtn?.addEventListener('click', async () => {
+    const charId = confirmBtn.dataset.charId;
+    const charName = confirmBtn.dataset.charName;
+
+    if (!charId) return;
+
+    try {
+        const response = await fetch(`/api/character/${charId}`, {
+            method: 'DELETE'
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            showNotification(`Character ${charName} reset successfully!`, 'success');
+            await loadCharacters(); 
+        } else {
+            showNotification(data.error || 'Failed to reset character!', 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting character:', error);
+        showNotification('Connection error during character reset!', 'error');
+    } finally {
+        // Close the modal regardless of outcome
+        deleteModal.classList.remove('active');
+    }
+});
+
+// Handle the cancel click
+cancelBtn?.addEventListener('click', () => {
+    deleteModal.classList.remove('active');
+});
+
 // ==========================================
 // CHARACTER LOADING
 // ==========================================
@@ -122,7 +161,7 @@ function createCharacterCard(char) {
                     <span class="level-badge">LEVEL ${char.level_num}</span>
                     <span class="xp-badge">${char.xp} XP</span>
                 </div>
-                <button class="reset-char-btn" onclick="event.stopPropagation(); handleDeleteCharacter(${char.char_id}, '${char.name}')">
+                <button class="reset-char-btn" onclick="event.stopPropagation(); showDeleteConfirmModal(${char.char_id}, '${char.name}')">
                     RESET
                 </button>
             </div>
@@ -700,6 +739,21 @@ async function handleDeleteCharacter(charId, charName) {
         console.error('Error deleting character:', error);
         showNotification('Connection error during character reset!', 'error');
     }
+}
+
+function showDeleteConfirmModal(charId, charName) {
+    const modal = document.getElementById('deleteConfirmModal');
+    const charNameSpan = document.getElementById('deleteCharName');
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+
+    // Populate the modal with the specific character's info
+    charNameSpan.textContent = charName;
+
+    // Store the charId on the button itself to be used later
+    confirmBtn.dataset.charId = charId;
+    confirmBtn.dataset.charName = charName;
+
+    modal.classList.add('active');
 }
 
 

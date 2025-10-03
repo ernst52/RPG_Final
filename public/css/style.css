@@ -1201,20 +1201,104 @@ body {
 }
 
 .reset-char-btn {
-    /* Positioning is no longer absolute, just inline-flex */
-    background: #c0392b; /* Red color for danger/reset */
-    color: white;
-    border: none;
-    padding: 4px 8px; /* Smaller padding */
-    font-size: 0.7rem; /* Smaller text */
+    /* Base Button Styling from other buttons (Press Start 2P, etc.) */
+    position: relative;
+    padding: 0.5rem 1rem; /* Adjust padding for better fit */
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.7rem; /* Keep it small to fit in the card */
+    text-transform: uppercase;
+    letter-spacing: 1px;
     cursor: pointer;
-    border-radius: 3px;
-    font-weight: bold;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    transition: background 0.2s;
-    line-height: 1; /* Helps with vertical alignment */
+    transition: all 0.2s ease;
+    overflow: hidden;
+    line-height: 1; /* Ensure text is vertically centered */
+    white-space: nowrap; /* Prevent text wrap */
+
+    /* Critical Theme: Red and Dark */
+    background: var(--bg-darker);
+    color: var(--accent-red);
+    border: 2px solid var(--accent-red);
+    box-shadow: 0 0 10px rgba(255, 0, 64, 0.5); /* Subtle red glow */
 }
 
 .reset-char-btn:hover {
-    background: #e74c3c;
+    /* Intense Feedback on Hover (Danger/Wipeout) */
+    background: var(--accent-red);
+    color: var(--text-bright); /* White text on red background */
+    box-shadow: 0 0 20px var(--accent-red); /* Stronger red glow */
+    transform: scale(1.05);
+    /* Add a slight text glitch effect on hover */
+    text-shadow: 1px 1px var(--accent-blue), -1px -1px var(--accent-yellow);
+}
+
+.reset-char-btn:active {
+    /* Push-down effect */
+    transform: scale(0.95);
+    background: #cc0033; /* Darker red on press */
+    box-shadow: none;
+}
+
+
+@keyframes reset-flash {
+    0% { background: rgba(255, 0, 64, 0.2); }
+    50% { background: rgba(255, 0, 64, 0.5); }
+    100% { background: rgba(255, 0, 64, 0.2); }
+}
+
+/* ==========================================
+   DELETE CONFIRM MODAL STYLING
+   ========================================== */
+
+#deleteModalTitle {
+    color: var(--accent-red);
+    text-shadow: 0 0 15px var(--accent-red);
+}
+
+#deleteConfirmModal .modal-body p {
+    font-size: 1.3rem;
+    line-height: 1.6;
+    text-align: center;
+}
+
+#deleteCharName {
+    color: var(--accent-yellow);
+    font-family: 'Press Start 2P', monospace;
+}
+
+/* New Danger Button Style */
+.btn-danger {
+    position: relative;
+    padding: 1rem 2rem;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1rem;
+    background: var(--accent-red);
+    color: var(--text-bright);
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px var(--accent-red);
+}
+
+.btn-danger:hover {
+    box-shadow: 0 0 40px var(--accent-red);
+    transform: scale(1.05);
+    filter: brightness(1.2);
+}
+
+.btn-danger:active {
+    transform: scale(0.98);
+}
+
+/* Secondary button override for cancel */
+#cancelDeleteBtn {
+    background: transparent;
+    border: 2px solid var(--text-dim);
+    color: var(--text-dim);
+}
+#cancelDeleteBtn:hover {
+    background: var(--text-dim);
+    color: var(--bg-darker);
+    box-shadow: none;
 }
