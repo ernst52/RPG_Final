@@ -132,25 +132,26 @@ app.get('/api/characters', async (req, res) => {
     try {
         // Get all character templates with player's progress
         const [templates] = await pool.query(`
-            SELECT 
-                ct.template_id,
-                ct.name,
-                ct.class_id,
-                ct.description,
-                cl.class_name,
-                c.char_id,
-                c.level_id,
-                c.xp,
-                l.level_num,
-                l.xp_required AS xp_for_next_level,
-                CASE WHEN c.char_id IS NOT NULL THEN 1 ELSE 0 END as is_owned
-            FROM character_template ct
-            JOIN classtable cl ON ct.class_id = cl.class_id
-            LEFT JOIN charactertable c ON ct.template_id = c.template_id AND c.player_id = ?
-            LEFT JOIN leveltable l ON c.level_id = l.level_id
-            WHERE ct.is_active = 1
-            ORDER BY ct.template_id
-        `, [req.session.playerId]);
+    SELECT 
+        ct.template_id,
+        ct.name,
+        ct.class_id,
+        ct.description,
+        ct.image, -- Added image column
+        cl.class_name,
+        c.char_id,
+        c.level_id,
+        c.xp,
+        l.level_num,
+        l.xp_required AS xp_for_next_level,
+        CASE WHEN c.char_id IS NOT NULL THEN 1 ELSE 0 END as is_owned
+    FROM character_template ct
+    JOIN classtable cl ON ct.class_id = cl.class_id
+    LEFT JOIN charactertable c ON ct.template_id = c.template_id AND c.player_id = ?
+    LEFT JOIN leveltable l ON c.level_id = l.level_id
+    WHERE ct.is_active = 1
+    ORDER BY ct.template_id
+`, [req.session.playerId]);
 
         console.log(`✅ FOUND ${templates.length} CHARACTER TEMPLATES`);
         res.json({ success: true, characters: templates });
@@ -232,19 +233,20 @@ app.get('/api/character/:id', async (req, res) => {
     
     try {
         const [characters] = await pool.query(`
-            SELECT 
-                c.*,
-                ct.name as template_name,
-                cl.class_name,
-                cl.description as class_description,
-                l.level_num,
-                l.xp_required as xp_for_next_level
-            FROM charactertable c
-            JOIN character_template ct ON c.template_id = ct.template_id
-            JOIN classtable cl ON c.class_id = cl.class_id
-            JOIN leveltable l ON c.level_id = l.level_id
-            WHERE c.char_id = ? AND c.player_id = ?
-        `, [charId, req.session.playerId]);
+    SELECT 
+        c.*,
+        ct.name as template_name,
+        ct.image, -- Added image column
+        cl.class_name,
+        cl.description as class_description,
+        l.level_num,
+        l.xp_required as xp_for_next_level
+    FROM charactertable c
+    JOIN character_template ct ON c.template_id = ct.template_id
+    JOIN classtable cl ON c.class_id = cl.class_id
+    JOIN leveltable l ON c.level_id = l.level_id
+    WHERE c.char_id = ? AND c.player_id = ?
+`, [charId, req.session.playerId]);
         
         if (characters.length === 0) {
             return res.status(404).json({ error: 'Character not found or not owned' });
@@ -291,13 +293,14 @@ app.get('/api/equipment', async (req, res) => {
     
     try {
         const [equipment] = await pool.query(`
-            SELECT 
-                e.*,
-                st.slot_name
-            FROM equipment e
-            JOIN slottype st ON e.slot_type_id = st.slot_type_id
-            ORDER BY e.slot_type_id, e.level_requirement, e.name
-        `);
+    SELECT 
+        e.*,
+        e.image, -- Added image column
+        st.slot_name
+    FROM equipment e
+    JOIN slottype st ON e.slot_type_id = st.slot_type_id
+    ORDER BY e.slot_type_id, e.level_requirement, e.name
+`);
         
         console.log(`✅ FOUND ${equipment.length} EQUIPMENT ITEMS`);
         res.json({ success: true, equipment });
@@ -315,9 +318,9 @@ app.post('/api/equip', async (req, res) => {
     
     try {
         const [items] = await pool.query(
-            'SELECT slot_type_id FROM equipment WHERE item_id = ?',
-            [itemId]
-        );
+    'SELECT slot_type_id, image FROM equipment WHERE item_id = ?',
+    [itemId]
+);
         
         if (items.length === 0) {
             return res.status(404).json({ success: false, error: 'Item not found' });

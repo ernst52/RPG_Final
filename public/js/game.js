@@ -154,33 +154,34 @@ function createCharacterCard(char) {
     const initial = char.name.charAt(0).toUpperCase();
     
     let levelInfo;
-    if (isOwned) {
-        levelInfo = `
-            <div class="character-card-level-row">
-                <div class="character-card-level">
-                    <span class="level-badge">LEVEL ${char.level_num}</span>
-                    <span class="xp-badge">${char.xp} XP</span>
-                </div>
-                <button class="reset-char-btn" onclick="event.stopPropagation(); showDeleteConfirmModal(${char.char_id}, '${char.name}')">
-                    RESET
-                </button>
-            </div>
-            
-        `;
-    } else {
-        levelInfo = `
+if (isOwned) {
+    levelInfo = `
+        <div class="character-card-level-row">
             <div class="character-card-level">
-                <span class="level-badge" style="background: var(--primary-blue);">AVAILABLE</span>
+                <span class="level-badge">LEVEL ${char.level_num}</span>
+                <span class="xp-badge">${char.xp} XP</span>
             </div>
-        `;
-    }
-    
-    card.innerHTML = `
-        <div class="character-card-portrait" data-initial="${initial}"></div>
-        <div class="character-card-name">${char.name}</div>
-        <div class="character-card-class">${char.class_name}</div>
-        ${levelInfo}
+            <button class="reset-char-btn" onclick="event.stopPropagation(); showDeleteConfirmModal(${char.char_id}, '${char.name}')">
+                RESET
+            </button>
+        </div>
     `;
+} else {
+    levelInfo = `
+        <div class="character-card-level">
+            <span class="level-badge" style="background: var(--primary-blue);">AVAILABLE</span>
+        </div>
+    `;
+}
+
+card.innerHTML = `
+    <div class="character-card-portrait">
+        <img src="${char.image || '/images/placeholder.png'}" alt="${char.name} portrait" class="character-image">
+    </div>
+    <div class="character-card-name">${char.name}</div>
+    <div class="character-card-class">${char.class_name}</div>
+    ${levelInfo}
+`;
     
     return card;
 }
@@ -268,15 +269,11 @@ function displayCharacterDetails() {
     document.getElementById('charLevel').textContent = currentCharacter.level_num;
     
     // Update portrait with initial
-    const portrait = document.getElementById('charPortrait');
-    const initial = currentCharacter.name.charAt(0).toUpperCase();
-    portrait.style.display = 'flex';
-    portrait.style.alignItems = 'center';
-    portrait.style.justifyContent = 'center';
-    portrait.style.fontSize = '5rem';
-    portrait.style.fontFamily = 'Press Start 2P, monospace';
-    portrait.style.color = 'var(--bg-darker)';
-    portrait.textContent = initial;
+    // Update portrait with image
+const portrait = document.getElementById('charPortrait');
+portrait.innerHTML = `
+    <img src="${currentCharacter.image || '/images/placeholder.png'}" alt="${currentCharacter.name} portrait" class="character-image">
+`;
     
     // Update XP bar
     const currentXP = currentCharacter.xp;
@@ -467,18 +464,13 @@ function showEquipmentModal(item) {
     document.getElementById('modalItemDurability').textContent = `${item.durability}/${item.max_durability}`;
     
     // Set item icon (using slot emoji)
-    const iconMap = {
-        'Head': '🪖',
-        'Chest': '🦺',
-        'Legs': '👖',
-        'Weapon': '🔫',
-        'Shield': '🛡️'
-    };
-    const modalIcon = document.getElementById('modalItemIcon');
-    modalIcon.textContent = iconMap[item.slot_name] || '📦';
-    modalIcon.style.fontSize = '4rem';
-    modalIcon.style.textAlign = 'center';
-    modalIcon.style.padding = '2rem';
+   // Set item icon (using image from DB)
+const modalIcon = document.getElementById('modalItemIcon');
+modalIcon.innerHTML = `
+    <img src="${item.image || '/images/placeholder.png'}" alt="${item.name} icon" class="equipment-image">
+`;
+modalIcon.style.textAlign = 'center';
+modalIcon.style.padding = '2rem';
     
     // Display bonuses
     const bonusesContainer = document.getElementById('modalItemBonuses');
