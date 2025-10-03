@@ -184,15 +184,21 @@ async function selectNewCharacter(templateId) {
         const data = await response.json();
         
         if (data.success) {
-            showNotification('Character created!', 'success');
-            // Now select the newly created character
-            await selectCharacter(data.charId);
+            showNotification('Character created! Select it to start playing.', 'success');
+            
+            // 👇 KEY CHANGE: Don't select the character immediately.
+            //    Instead, refresh the list to show the new card as "owned."
+            await loadCharacters(); 
+            
+            // The user must now click the card (which is now an owned character) 
+            // to call selectCharacter and transition to the game screen.
+            
         } else {
             showNotification(data.error || 'Failed to create character!', 'error');
         }
     } catch (error) {
-        console.error('Error selecting character:', error);
-        showNotification('Connection error!', 'error');
+        console.error('Error creating new character:', error);
+        showNotification('Connection error during character creation!', 'error');
     }
 }
 
@@ -201,10 +207,12 @@ function showGameScreen() {
     document.getElementById('gameScreen').classList.add('active');
 }
 
-function backToCharacterSelection() {
+async function backToCharacterSelection() {
     document.getElementById('gameScreen').classList.remove('active');
     document.getElementById('characterSelection').classList.add('active');
     currentCharacter = null;
+
+    await loadCharacters(); 
 }
 
 // ==========================================
