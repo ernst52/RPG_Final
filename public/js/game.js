@@ -25,6 +25,8 @@ async function initializeGame() {
 // ==========================================
 
 function setupEventListeners() {
+
+    document.getElementById('dashboardBtn')?.addEventListener('click', handleDashboard);
     // Logout button
     document.getElementById('logoutBtn')?.addEventListener('click', handleLogout);
     
@@ -689,6 +691,11 @@ async function handleLogout() {
         console.error('Logout error:', error);
         window.location.href = '/';
     }
+}
+
+function handleDashboard() {
+    // Redirect to the dashboard page
+    window.location.href = '/dashboard'; 
 }
 
 async function updateCharacterUI() {
