@@ -6,13 +6,26 @@
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body class="login-page">
+    <div class="background-slideshow" id="slideshow">
+      <div class="background-slide anim-panZoomIn active" style="background-image: url('/images/1.png');"></div>
+      <div class="background-slide anim-panLeft" style="background-image: url('/images/2.png');"></div>
+      <div class="background-slide anim-panRight" style="background-image: url('/images/3.png');"></div>
+      <div class="background-slide anim-panUp" style="background-image: url('/images/4.png');"></div>
+      <div class="background-slide anim-panDown" style="background-image: url('/images/5.png');"></div>
+      <div class="background-slide anim-zoomInOut" style="background-image: url('/images/6.png');"></div>
+      <div class="background-slide anim-panZoomIn" style="background-image: url('/images/7.png');"></div>
+      <div class="background-slide anim-panLeft" style="background-image: url('/images/8.png');"></div>
+      <div class="background-slide anim-panRight" style="background-image: url('/images/9.png');"></div>
+      <div class="background-slide anim-panUp" style="background-image: url('/images/10.png');"></div>
+      <div class="background-slide anim-panDown" style="background-image: url('/images/11.png');"></div>
+    </div>
+
     <div class="login-container">
       <div class="login-card">
         <div class="login-header">
           <h1 class="glitch-text">Soyjak Party</h1>
           <div class="subtitle">Enter the Matrix</div>
         </div>
-
         <form class="login-form" id="loginForm">
           <div class="form-group">
             <label>Username</label>
@@ -37,20 +50,30 @@
         </div>
       </div>
     </div>
-
     <div id="loginNotification" class="notification"></div>
-
     <script>
+      // Slideshow functionality
+      const slides = document.querySelectorAll('.background-slide');
+      let currentSlide = 0;
+
+      function showNextSlide() {
+        slides[currentSlide].classList.remove('active');
+        currentSlide = (currentSlide + 1) % slides.length;
+        slides[currentSlide].classList.add('active');
+      }
+
+      // Change slide every 7 seconds
+      setInterval(showNextSlide, 7000);
+
+      // Original login form code
       const form = document.getElementById("loginForm");
       const notification = document.getElementById("loginNotification");
       const registerBtn = document.getElementById("registerBtn");
-
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
         const formData = new FormData(form);
         const username = formData.get("username");
         const email = formData.get("email");
-
         try {
           const res = await fetch("/api/login", {
             method: "POST",
@@ -58,7 +81,6 @@
             body: JSON.stringify({ username, email }),
           });
           const data = await res.json();
-
           if (data.success) {
             window.location.href = "/game";
           } else {
@@ -72,12 +94,10 @@
           setTimeout(() => notification.classList.remove("show"), 3000);
         }
       });
-
       registerBtn.addEventListener("click", async () => {
         const formData = new FormData(form);
         const username = formData.get("username");
         const email = formData.get("email");
-
         try {
           const res = await fetch("/api/register", {
             method: "POST",
@@ -85,7 +105,6 @@
             body: JSON.stringify({ username, email }),
           });
           const data = await res.json();
-
           if (data.success) {
             window.location.href = "/game";
           } else {
@@ -100,7 +119,6 @@
         }
       });
     </script>
-
     <div class="glitch-overlay"></div>
     <div class="scan-line"></div>
   </body>

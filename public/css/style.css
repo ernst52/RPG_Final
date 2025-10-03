@@ -1302,3 +1302,73 @@ body {
     color: var(--bg-darker);
     box-shadow: none;
 }
+
+/* ==========================================
+   BACKGROUND SLIDESHOW
+   ========================================== */
+
+.background-slideshow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    background: #000;
+}
+
+.background-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.4);
+}
+
+.background-slide.active {
+    opacity: 1;
+}
+
+/* Ken Burns effect animations */
+@keyframes panZoomIn {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.3) translate(-5%, -5%); }
+}
+
+@keyframes panLeft {
+    0% { transform: scale(1.2) translateX(0); }
+    100% { transform: scale(1.2) translateX(-10%); }
+}
+
+@keyframes panRight {
+    0% { transform: scale(1.2) translateX(-10%); }
+    100% { transform: scale(1.2) translateX(0); }
+}
+
+@keyframes panUp {
+    0% { transform: scale(1.2) translateY(0); }
+    100% { transform: scale(1.2) translateY(-10%); }
+}
+
+@keyframes panDown {
+    0% { transform: scale(1.2) translateY(-10%); }
+    100% { transform: scale(1.2) translateY(0); }
+}
+
+@keyframes zoomInOut {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+}
+
+.background-slide.anim-panZoomIn { animation: panZoomIn 15s ease-in-out infinite alternate; }
+.background-slide.anim-panLeft { animation: panLeft 15s ease-in-out infinite alternate; }
+.background-slide.anim-panRight { animation: panRight 15s ease-in-out infinite alternate; }
+.background-slide.anim-panUp { animation: panUp 15s ease-in-out infinite alternate; }
+.background-slide.anim-panDown { animation: panDown 15s ease-in-out infinite alternate; }
+.background-slide.anim-zoomInOut { animation: zoomInOut 15s ease-in-out infinite; }
