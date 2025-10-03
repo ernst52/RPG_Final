@@ -1379,3 +1379,127 @@ body {
         max-width: 90%;
     }
 }
+
+/* ==========================================
+   SQL QUERY TERMINAL
+   ========================================== */
+
+.sql-terminal {
+    position: fixed;
+    bottom: 0;
+    right: 20px;
+    width: 500px;
+    max-height: 400px;
+    background: rgba(0, 0, 0, 0.95);
+    border: 2px solid var(--primary-gold);
+    border-bottom: none;
+    border-radius: 5px 5px 0 0;
+    z-index: 9998;
+    transition: all 0.3s ease;
+    font-family: 'Courier New', monospace;
+}
+
+.sql-terminal.minimized {
+    max-height: 40px;
+}
+
+.sql-terminal-header {
+    background: var(--primary-gold);
+    color: var(--bg-darker);
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.sql-terminal-header h4 {
+    font-size: 0.9rem;
+    font-family: 'Cinzel', serif;
+    margin: 0;
+}
+
+.sql-terminal-toggle {
+    background: none;
+    border: none;
+    color: var(--bg-darker);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.sql-terminal.minimized .sql-terminal-toggle {
+    transform: rotate(180deg);
+}
+
+.sql-terminal-body {
+    max-height: 350px;
+    overflow-y: auto;
+    padding: 1rem;
+    font-size: 0.75rem;
+    color: #0f0;
+}
+
+.sql-terminal.minimized .sql-terminal-body {
+    display: none;
+}
+
+.sql-query-entry {
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(212, 160, 23, 0.2);
+}
+
+.sql-query-timestamp {
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    margin-bottom: 0.2rem;
+}
+
+.sql-query-text {
+    color: #0f0;
+    word-wrap: break-word;
+}
+
+.sql-terminal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.sql-terminal-body::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.sql-terminal-body::-webkit-scrollbar-thumb {
+    background: var(--primary-gold);
+}
+
+/* New styles to manage the title and refresh button */
+.table-header-container {
+    display: flex;
+    justify-content: space-between; /* Puts space between title and button */
+    align-items: center; /* Vertically aligns title and button */
+    margin-bottom: 1.5rem; /* Maintain separation from table data */
+}
+
+/* Override the default h2 margin to prevent double spacing */
+.table-header-container h2 {
+    margin-bottom: 0; /* Clear the bottom margin from the original h2 rule */
+}
+
+/* Style the refresh button, assuming 'btn-secondary' exists */
+.refresh-btn {
+    /* Custom styling for the button to fit the dashboard's aesthetic */
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.1); /* Subtle background */
+    border: 2px solid var(--primary-gold);
+    color: var(--primary-gold);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.refresh-btn:hover {
+    background: var(--primary-gold);
+    color: var(--bg-darker);
+}

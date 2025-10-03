@@ -43,6 +43,9 @@
             <button class="btn-primary" type="submit">Login</button>
             <button class="btn-secondary" id="registerBtn" type="button">Create Account</button>
           </div>
+          <div style="text-align: center; margin-top: 1rem;">
+            <button class="btn-secondary" id="dashboardBtn" type="button">Database Dashboard</button>
+          </div>
         </form>
         <div class="login-footer">
           <div class="ascii-art">
@@ -54,7 +57,7 @@
     </div>
     <div id="loginNotification" class="notification"></div>
     <script>
-      // Slideshow functionality
+      // Slideshow functionality (Keep this as is)
       const slides = document.querySelectorAll('.background-slide');
       let currentSlide = 0;
 
@@ -67,59 +70,69 @@
       // Change slide every 7 seconds
       setInterval(showNextSlide, 7000);
 
-      // Original login form code
+      // --- Login/Register/Dashboard Logic ---
       const form = document.getElementById("loginForm");
       const notification = document.getElementById("loginNotification");
       const registerBtn = document.getElementById("registerBtn");
+      const dashboardBtn = document.getElementById("dashboardBtn"); // Get the dashboard button
+
+      /**
+       * Handles authentication via a specified endpoint and redirects on success.
+       * @param {string} endpoint - The API endpoint to call ('/api/login' or '/api/register').
+       * @param {string} redirectPath - The URL to redirect to on success ('/game' or '/dashboard').
+       */
+      async function authenticateAndRedirect(endpoint, redirectPath) {
+        const formData = new FormData(form);
+        const username = formData.get("username");
+        const email = formData.get("email");
+
+        if (!username || !email) {
+          notification.textContent = "Please enter both username and email.";
+          notification.classList.add("show", "error");
+          setTimeout(() => notification.classList.remove("show"), 3000);
+          return;
+        }
+
+        try {
+          const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email }),
+          });
+          const data = await res.json();
+
+          if (data.success) {
+            window.location.href = redirectPath;
+          } else {
+            notification.textContent = data.error || "Authentication failed";
+            notification.classList.add("show", "error");
+            setTimeout(() => notification.classList.remove("show"), 3000);
+          }
+        } catch (err) {
+          notification.textContent = "Connection error";
+          notification.classList.add("show", "error");
+          setTimeout(() => notification.classList.remove("show"), 3000);
+        }
+      }
+
+      // 1. Standard Login button handler (submits form to /api/login and redirects to /game)
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const formData = new FormData(form);
-        const username = formData.get("username");
-        const email = formData.get("email");
-        try {
-          const res = await fetch("/api/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, email }),
-          });
-          const data = await res.json();
-          if (data.success) {
-            window.location.href = "/game";
-          } else {
-            notification.textContent = data.error || "Login failed";
-            notification.classList.add("show", "error");
-            setTimeout(() => notification.classList.remove("show"), 3000);
-          }
-        } catch {
-          notification.textContent = "Connection error";
-          notification.classList.add("show", "error");
-          setTimeout(() => notification.classList.remove("show"), 3000);
-        }
+        await authenticateAndRedirect("/api/login", "/game");
       });
+
+      // 2. Register button handler (calls /api/register and redirects to /game)
       registerBtn.addEventListener("click", async () => {
-        const formData = new FormData(form);
-        const username = formData.get("username");
-        const email = formData.get("email");
-        try {
-          const res = await fetch("/api/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, email }),
-          });
-          const data = await res.json();
-          if (data.success) {
-            window.location.href = "/game";
-          } else {
-            notification.textContent = data.error || "Registration failed";
-            notification.classList.add("show", "error");
-            setTimeout(() => notification.classList.remove("show"), 3000);
-          }
-        } catch {
-          notification.textContent = "Connection error";
-          notification.classList.add("show", "error");
-          setTimeout(() => notification.classList.remove("show"), 3000);
-        }
+        await authenticateAndRedirect("/api/register", "/game");
       });
+
+      // 3. Database Dashboard button handler (calls /api/login and redirects to /dashboard)
+      dashboardBtn.addEventListener('click', async () => {
+        // This logs in the user (or registers them if they don't exist) 
+        // and then redirects to the dashboard page.
+        await authenticateAndRedirect("/api/login", "/dashboard");
+      });
+
     </script>
     <div class="glitch-overlay"></div>
     <div class="scan-line"></div>

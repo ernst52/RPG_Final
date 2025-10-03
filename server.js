@@ -512,6 +512,49 @@ app.post('/api/logout', (req, res) => {
     res.json({ success: true });
 });
 
+// ==========================================
+// DASHBOARD ROUTES
+// ==========================================
+
+// Serve dashboard page
+app.get('/dashboard', (req, res) => {
+    if (!req.session.playerId) {
+        return res.redirect('/');
+    }
+    res.sendFile(path.join(__dirname, 'views', 'dashboard.html'));
+});
+
+// API: Get table data
+app.get('/api/dashboard/:tableName', async (req, res) => {
+    if (!req.session.playerId) {
+        return res.status(401).json({ error: 'Not authenticated' });
+    }
+    
+    const { tableName } = req.params;
+    
+    // Whitelist of allowed tables (security measure)
+    const allowedTables = [
+        'player', 'character_template', 'charactertable', 'classtable',
+        'equipment', 'characterequipment', 'characterstats', 'leveltable',
+        'stat', 'slottype', 'template_base_stats'
+    ];
+    
+    if (!allowedTables.includes(tableName)) {
+        return res.status(400).json({ success: false, error: 'Invalid table name' });
+    }
+    
+    console.log(`📊 FETCHING DATA FROM TABLE: ${tableName}`);
+    
+    try {
+        const [rows] = await pool.query(`SELECT * FROM ${tableName}`);
+        console.log(`✅ FOUND ${rows.length} ROWS IN ${tableName}`);
+        res.json({ success: true, rows });
+    } catch (error) {
+        console.error(`❌ ERROR FETCHING ${tableName}:`, error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // Start server
 app.listen(PORT, () => {
     console.log(`

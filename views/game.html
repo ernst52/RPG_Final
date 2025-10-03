@@ -153,7 +153,16 @@
     <!-- VISUAL EFFECTS -->
     <div class="glitch-overlay"></div>
     <div class="scan-line"></div>
-
+    <!-- SQL QUERY TERMINAL -->
+<div class="sql-terminal minimized" id="sqlTerminal">
+    <div class="sql-terminal-header" onclick="toggleSQLTerminal()">
+        <h4>SQL QUERY LOG</h4>
+        <button class="sql-terminal-toggle">▼</button>
+    </div>
+    <div class="sql-terminal-body" id="sqlTerminalBody">
+        <div style="color: var(--text-dim);">Waiting for queries...</div>
+    </div>
+</div>
     <script src="/js/game.js"></script>
 </body>
 </html>

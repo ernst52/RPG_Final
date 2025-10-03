@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Database Dashboard - Soyjak Survivors</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      .dashboard-layout {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 2rem;
+        padding: 2rem;
+        max-width: 1800px;
+        margin: 0 auto;
+      }
+      .table-menu {
+        background: rgba(30, 24, 22, 0.9);
+        border: 3px solid var(--primary-gold);
+        border-radius: 10px;
+        padding: 1.5rem;
+        height: fit-content;
+      }
+      .table-menu h3 {
+        font-family: "Cinzel", serif;
+        color: var(--primary-gold);
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+      .table-menu-item {
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        background: rgba(30, 24, 22, 0.5);
+        border: 2px solid var(--primary-gold);
+        color: var(--text-light);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: "Cormorant Garamond", serif;
+      }
+      .table-menu-item:hover,
+      .table-menu-item.active {
+        background: var(--primary-gold);
+        color: var(--bg-darker);
+      }
+      .table-content {
+        background: rgba(30, 24, 22, 0.9);
+        border: 3px solid var(--primary-gold);
+        border-radius: 10px;
+        padding: 2rem;
+        overflow-x: auto;
+      }
+      .table-content h2 {
+        font-family: "Cinzel", serif;
+        color: var(--primary-gold);
+        margin-bottom: 1.5rem;
+      }
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .data-table th,
+      .data-table td {
+        border: 1px solid var(--primary-gold);
+        padding: 0.8rem;
+        text-align: left;
+        font-size: 0.9rem;
+      }
+      .data-table th {
+        background: var(--primary-gold);
+        color: var(--bg-darker);
+        font-family: "Cinzel", serif;
+      }
+      .data-table tr:nth-child(even) {
+        background: rgba(212, 160, 23, 0.05);
+      }
+      .data-table tr:hover {
+        background: rgba(212, 160, 23, 0.15);
+      }
+      
+    </style>
+  </head>
+  <body class="game-page">
+    <header class="game-header">
+      <div class="header-left">
+        <h1 class="glitch-text">Database Dashboard</h1>
+      </div>
+      <div class="header-right">
+        <button id="backToGameBtn" class="btn-secondary">Back to Game</button>
+        <button id="logoutBtn" class="btn-secondary">Logout</button>
+      </div>
+    </header>
+
+    <main class="dashboard-layout">
+      <aside class="table-menu">
+        <h3>Tables</h3>
+        <div class="table-menu-item active" data-table="player">Player</div>
+        <div class="table-menu-item" data-table="character_template">
+          Character Templates
+        </div>
+        <div class="table-menu-item" data-table="charactertable">
+          Characters
+        </div>
+        <div class="table-menu-item" data-table="classtable">Classes</div>
+        <div class="table-menu-item" data-table="equipment">Equipment</div>
+        <div class="table-menu-item" data-table="characterequipment">
+          Char Equipment
+        </div>
+        <div class="table-menu-item" data-table="characterstats">
+          Char Stats
+        </div>
+        <div class="table-menu-item" data-table="leveltable">Levels</div>
+        <div class="table-menu-item" data-table="stat">Stats</div>
+        <div class="table-menu-item" data-table="slottype">Slot Types</div>
+      </aside>
+
+      <section class="table-content">
+        <div class="table-header-container">
+          <h2 id="tableTitle">Player</h2>
+          <button id="refreshDataBtn" class="btn-secondary refresh-btn">
+            Refresh
+          </button>
+        </div>
+        <div id="tableData">Loading...</div>
+      </section>
+    </main>
+
+    <div id="notification" class="notification"></div>
+    <div class="glitch-overlay"></div>
+    <div class="scan-line"></div>
+
+    <script src="/js/dashboard.js"></script>
+    <!-- SQL QUERY TERMINAL -->
+    <div class="sql-terminal minimized" id="sqlTerminal">
+      <div class="sql-terminal-header" onclick="toggleSQLTerminal()">
+        <h4>SQL QUERY LOG</h4>
+        <button class="sql-terminal-toggle">▼</button>
+      </div>
+      <div class="sql-terminal-body" id="sqlTerminalBody">
+        <div style="color: var(--text-dim)">Waiting for queries...</div>
+      </div>
+    </div>
+  </body>
+</html>

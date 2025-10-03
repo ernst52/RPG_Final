@@ -764,3 +764,52 @@ document.addEventListener('keydown', (e) => {
         handleAddXP();
     }
 });
+
+// ==========================================
+// SQL QUERY TERMINAL
+// ==========================================
+
+function toggleSQLTerminal() {
+    const terminal = document.getElementById('sqlTerminal');
+    terminal.classList.toggle('minimized');
+}
+
+function logSQLQuery(query) {
+    const terminalBody = document.getElementById('sqlTerminalBody');
+    const timestamp = new Date().toLocaleTimeString();
+    
+    const entry = document.createElement('div');
+    entry.className = 'sql-query-entry';
+    entry.innerHTML = `
+        <div class="sql-query-timestamp">[${timestamp}]</div>
+        <div class="sql-query-text">${escapeHtml(query)}</div>
+    `;
+    
+    terminalBody.insertBefore(entry, terminalBody.firstChild);
+    
+    // Keep only last 50 queries
+    while (terminalBody.children.length > 50) {
+        terminalBody.removeChild(terminalBody.lastChild);
+    }
+}
+
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+// Intercept fetch calls to log SQL queries
+const originalFetch = window.fetch;
+window.fetch = function(...args) {
+    const url = args[0];
+    if (typeof url === 'string' && url.startsWith('/api/')) {
+        logSQLQuery(`REQUEST: ${args[1]?.method || 'GET'} ${url}`);
+    }
+    return originalFetch.apply(this, args);
+};
