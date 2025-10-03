@@ -99,8 +99,11 @@ function createCharacterCard(char) {
     const card = document.createElement('div');
     card.className = 'character-card';
     
+    // If player owns this character, show their progress
+    // If not, show it's available to select
     const isOwned = char.is_owned === 1;
     
+    // Main card click behavior (selects/creates the character)
     card.onclick = () => {
         if (isOwned) {
             selectCharacter(char.char_id);
@@ -114,13 +117,16 @@ function createCharacterCard(char) {
     let levelInfo;
     if (isOwned) {
         levelInfo = `
-            <div class="character-card-level">
-                <span class="level-badge">LEVEL ${char.level_num}</span>
-                <span class="xp-badge">${char.xp} XP</span>
+            <div class="character-card-level-row">
+                <div class="character-card-level">
+                    <span class="level-badge">LEVEL ${char.level_num}</span>
+                    <span class="xp-badge">${char.xp} XP</span>
+                </div>
+                <button class="reset-char-btn" onclick="event.stopPropagation(); handleDeleteCharacter(${char.char_id}, '${char.name}')">
+                    RESET
+                </button>
             </div>
-            <button class="reset-char-btn" onclick="event.stopPropagation(); handleDeleteCharacter(${char.char_id}, '${char.name}')">
-                RESET
-            </button>
+            
         `;
     } else {
         levelInfo = `
@@ -139,6 +145,7 @@ function createCharacterCard(char) {
     
     return card;
 }
+
 
 
 // ==========================================

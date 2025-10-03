@@ -1175,27 +1175,44 @@ body {
     }
 }
 
-/* New reset btn */
+/* --- CHARACTER CARD STYLES --- */
 
 .character-card {
-    position: relative; /* Needed for absolute positioning of the reset button */
-    /* existing styles... */
+    /* ... existing styles ... */
+    display: flex; /* Make it a flex container */
+    flex-direction: column; /* Stack contents vertically */
+    justify-content: space-between; /* Push elements apart */
+    padding-bottom: 10px; /* Add some padding at the bottom */
+    height: auto; /* Allow height to adjust */
+}
+
+.character-card-level-row {
+    display: flex; /* Use flexbox to align level and reset button */
+    justify-content: space-between; /* Space out the two items */
+    align-items: center; /* Vertically align them */
+    width: 100%;
+    margin-top: 8px; /* Space from the class name above */
+}
+
+.character-card-level {
+    /* Retain original level styling for the badges */
+    display: flex;
+    gap: 5px;
 }
 
 .reset-char-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+    /* Positioning is no longer absolute, just inline-flex */
     background: #c0392b; /* Red color for danger/reset */
     color: white;
     border: none;
-    padding: 5px 10px;
-    font-size: 0.75rem;
+    padding: 4px 8px; /* Smaller padding */
+    font-size: 0.7rem; /* Smaller text */
     cursor: pointer;
     border-radius: 3px;
     font-weight: bold;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     transition: background 0.2s;
+    line-height: 1; /* Helps with vertical alignment */
 }
 
 .reset-char-btn:hover {
