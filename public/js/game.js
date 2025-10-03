@@ -99,8 +99,6 @@ function createCharacterCard(char) {
     const card = document.createElement('div');
     card.className = 'character-card';
     
-    // If player owns this character, show their progress
-    // If not, show it's available to select
     const isOwned = char.is_owned === 1;
     
     card.onclick = () => {
@@ -120,6 +118,9 @@ function createCharacterCard(char) {
                 <span class="level-badge">LEVEL ${char.level_num}</span>
                 <span class="xp-badge">${char.xp} XP</span>
             </div>
+            <button class="reset-char-btn" onclick="event.stopPropagation(); handleDeleteCharacter(${char.char_id}, '${char.name}')">
+                RESET
+            </button>
         `;
     } else {
         levelInfo = `
@@ -655,6 +656,35 @@ async function updateCharacterUI() {
 
     // Update available equipment (locks/unlocks, bonuses)
     displayAvailableEquipment();
+}
+
+// ==========================================
+// CHARACTER DELETION
+// ==========================================
+
+async function handleDeleteCharacter(charId, charName) {
+    if (!confirm(`Are you sure you want to permanently reset the character "${charName}"? This cannot be undone.`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/character/${charId}`, {
+            method: 'DELETE'
+        });
+
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification(`Character ${charName} reset successfully!`, 'success');
+            // Refresh the character selection screen
+            await loadCharacters(); 
+        } else {
+            showNotification(data.error || 'Failed to reset character!', 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting character:', error);
+        showNotification('Connection error during character reset!', 'error');
+    }
 }
 
 

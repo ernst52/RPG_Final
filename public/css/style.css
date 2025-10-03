@@ -1174,3 +1174,30 @@ body {
         flex-direction: column;
     }
 }
+
+/* New reset btn */
+
+.character-card {
+    position: relative; /* Needed for absolute positioning of the reset button */
+    /* existing styles... */
+}
+
+.reset-char-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #c0392b; /* Red color for danger/reset */
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    border-radius: 3px;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: background 0.2s;
+}
+
+.reset-char-btn:hover {
+    background: #e74c3c;
+}

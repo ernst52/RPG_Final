@@ -469,6 +469,39 @@ app.post('/api/reducexp', async (req, res) => {
     }
 });
 
+// API: Delete (Reset) a Character
+app.delete('/api/character/:charId', async (req, res) => {
+    const charId = req.params.charId;
+    
+    if (!req.session.playerId) {
+        return res.status(401).json({ success: false, error: 'Not authenticated' });
+    }
+
+    console.log(`💣 DELETING CHARACTER ${charId} for PLAYER ${req.session.playerId}`);
+
+    try {
+        // Ensure the character belongs to the current player and delete it
+        const [result] = await pool.query(
+            'DELETE FROM charactertable WHERE char_id = ? AND player_id = ?',
+            [charId, req.session.playerId]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, error: 'Character not found or not owned' });
+        }
+        
+        // Due to ON DELETE CASCADE constraints, related rows in 
+        // characterstats and characterequipment are automatically deleted.
+        
+        console.log(`✅ CHARACTER ${charId} DELETED SUCCESSFULLY`);
+        res.json({ success: true, message: 'Character successfully deleted' });
+        
+    } catch (error) {
+        console.error('❌ DELETE CHARACTER ERROR:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // API: Logout
 app.post('/api/logout', (req, res) => {
     console.log(`👋 PLAYER ${req.session.playerId} LOGGING OUT`);
