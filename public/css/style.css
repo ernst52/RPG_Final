@@ -1,18 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:wght@400;700&display=swap');
 
 :root {
-    --bg-dark: #0d0d0d;
-    --bg-darker: #000000;
-    --primary-green: #00ff41;
-    --secondary-green: #00cc33;
-    --accent-red: #ff0040;
-    --accent-blue: #00d4ff;
-    --accent-yellow: #ffff00;
-    --text-bright: #ffffff;
-    --text-dim: #aaaaaa;
-    --border-color: #00ff41;
-    --shadow-glow: 0 0 20px rgba(0, 255, 65, 0.5);
-    --shadow-glow-intense: 0 0 40px rgba(0, 255, 65, 0.8);
+    --bg-dark: #2E2A27; /* Deep, warm brown for a classic feel */
+    --bg-darker: #1C1816; /* Darker brown for depth */
+    --primary-gold: #D4A017; /* Rich gold for elegance */
+    --secondary-gold: #B8860B; /* Darker gold accent */
+    --accent-burgundy: #800020; /* Deep burgundy for richness */
+    --accent-ivory: #F8E7C9; /* Soft ivory for contrast */
+    --text-light: #F5E8C7; /* Creamy text color */
+    --text-dim: #A68A64; /* Muted beige for secondary text */
+    --border-color: #D4A017; /* Gold for borders */
+    --shadow-glow: 0 0 15px rgba(212, 160, 23, 0.3); /* Soft gold glow */
+    --shadow-glow-intense: 0 0 25px rgba(212, 160, 23, 0.5); /* Stronger gold glow */
 }
 
 * {
@@ -22,74 +21,56 @@
 }
 
 body {
-    font-family: 'VT323', monospace;
+    font-family: 'Cormorant Garamond', serif;
     background: var(--bg-darker);
-    color: var(--text-bright);
+    color: var(--text-light);
     overflow-x: hidden;
     position: relative;
 }
 
 /* ==========================================
-   GLITCH EFFECTS & ANIMATIONS
+   CLASSICAL OVERLAY & ANIMATIONS
    ========================================== */
 
-@keyframes glitch-overlay {
-    0%, 100% { opacity: 0.05; }
-    50% { opacity: 0.1; }
+@keyframes parchment-overlay {
+    0%, 100% { opacity: 0.1; }
+    50% { opacity: 0.2; }
 }
 
-.glitch-overlay {
+.parchment-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
-        repeating-linear-gradient(
-            0deg,
-            rgba(0, 255, 65, 0.03) 0px,
-            transparent 2px,
-            transparent 4px
-        );
+    background: url('https://www.transparenttextures.com/patterns/paper-fibers.png'); /* Subtle parchment texture */
+    opacity: 0.1;
     pointer-events: none;
     z-index: 9999;
-    animation: glitch-overlay 2s infinite;
+    animation: parchment-overlay 3s infinite;
 }
 
-@keyframes glitch-text {
-    0% {
-        text-shadow: 2px 2px var(--accent-red), -2px -2px var(--accent-blue);
-    }
-    25% {
-        text-shadow: -2px 2px var(--accent-red), 2px -2px var(--accent-blue);
-    }
-    50% {
-        text-shadow: 2px -2px var(--accent-red), -2px 2px var(--accent-blue);
-    }
-    75% {
-        text-shadow: -2px -2px var(--accent-red), 2px 2px var(--accent-blue);
-    }
-    100% {
-        text-shadow: 2px 2px var(--accent-red), -2px -2px var(--accent-blue);
-    }
+@keyframes ornate-text {
+    0%, 100% { text-shadow: 1px 1px var(--accent-burgundy); }
+    50% { text-shadow: 2px 2px var(--accent-burgundy), -1px -1px var(--primary-gold); }
 }
 
-.glitch-text {
+.ornate-text {
     position: relative;
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'Cinzel', serif;
     font-size: 2.5rem;
-    color: var(--primary-green);
-    text-shadow: 2px 2px var(--accent-red), -2px -2px var(--accent-blue);
-    animation: glitch-text 0.3s infinite;
+    color: var(--primary-gold);
+    text-shadow: 1px 1px var(--accent-burgundy);
+    animation: ornate-text 2s infinite;
 }
 
-@keyframes blink {
+@keyframes flicker {
     0%, 50%, 100% { opacity: 1; }
-    25%, 75% { opacity: 0; }
+    25%, 75% { opacity: 0.7; }
 }
 
-.blink-text {
-    animation: blink 2s infinite;
+.flicker-text {
+    animation: flicker 3s infinite;
 }
 
 /* ==========================================
@@ -109,29 +90,22 @@ body {
     animation: fadeSlideUp 1.2s ease-out;
 }
 
-
 .login-card {
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(5.5px);
-  border: 2px solid rgba(0, 255, 65, 0.6);
-  border-radius: 15px;
-  padding: 3rem;
-  max-width: 500px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5),
-              0 0 60px rgba(0, 255, 65, 0.2),
-              inset 0 0 80px rgba(0, 255, 65, 0.03);
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
+    background: rgba(30, 24, 22, 0.8); /* Dark brown with transparency */
+    border: 2px solid var(--primary-gold);
+    border-radius: 10px;
+    padding: 3rem;
+    max-width: 500px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), var(--shadow-glow);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
 
-
 .login-card:hover {
-    background: rgba(0, 0, 0, 0.5);
-    border-color: rgba(0, 255, 65, 0.8);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 
-                0 0 80px rgba(0, 255, 65, 0.3),
-                inset 0 0 80px rgba(0, 255, 65, 0.05);
+    background: rgba(30, 24, 22, 0.9);
+    border-color: var(--secondary-gold);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), var(--shadow-glow-intense);
 }
 
 .login-card::before {
@@ -141,15 +115,15 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(0, 255, 65, 0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(212, 160, 23, 0.1), transparent 70%);
     animation: subtlePulse 4s ease-in-out infinite;
     z-index: -1;
     pointer-events: none;
 }
 
 @keyframes subtlePulse {
-    0%, 100% { opacity: 0.5; transform: scale(1); }
-    50% { opacity: 0.8; transform: scale(1.1); }
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.05); }
 }
 
 .login-header {
@@ -165,12 +139,12 @@ body {
 .subtitle {
     color: var(--text-dim);
     font-size: 1.2rem;
-    letter-spacing: 2px;
+    font-style: italic;
 }
 
 .ascii-art {
     text-align: center;
-    color: var(--primary-green);
+    color: var(--primary-gold);
     font-size: 0.6rem;
     line-height: 0.8;
     margin: 1rem 0;
@@ -189,26 +163,26 @@ body {
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    color: var(--primary-green);
+    color: var(--primary-gold);
     font-size: 1.2rem;
-    letter-spacing: 2px;
+    font-family: 'Cinzel', serif;
 }
 
 .form-group input {
     width: 100%;
     padding: 1rem;
-    background: rgba(0, 0, 0, 0.8);
-    border: 2px solid var(--primary-green);
-    color: var(--text-bright);
-    font-family: 'VT323', monospace;
+    background: rgba(30, 24, 22, 0.8);
+    border: 2px solid var(--primary-gold);
+    color: var(--text-light);
+    font-family: 'Cormorant Garamond', serif;
     font-size: 1.5rem;
     transition: all 0.3s ease;
 }
 
 .form-group input:focus {
     outline: none;
-    border-color: var(--accent-blue);
-    box-shadow: 0 0 20px var(--accent-blue);
+    border-color: var(--accent-ivory);
+    box-shadow: 0 0 15px var(--accent-ivory);
 }
 
 .input-border {
@@ -217,7 +191,7 @@ body {
     left: 0;
     height: 2px;
     width: 0;
-    background: var(--accent-blue);
+    background: var(--accent-ivory);
     transition: width 0.3s ease;
 }
 
@@ -232,14 +206,14 @@ body {
 .btn-primary, .btn-secondary, .btn-back, .btn-xp {
     position: relative;
     padding: 1rem 2rem;
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'Cinzel', serif;
     font-size: 1rem;
     background: var(--bg-dark);
-    color: var(--primary-green);
-    border: 2px solid var(--primary-green);
+    color: var(--primary-gold);
+    border: 2px solid var(--primary-gold);
     cursor: pointer;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     transition: all 0.3s ease;
     overflow: hidden;
 }
@@ -251,7 +225,7 @@ body {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, var(--primary-green), transparent);
+    background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
     transition: left 0.5s ease;
 }
 
@@ -260,7 +234,7 @@ body {
 }
 
 .btn-primary:hover {
-    background: var(--primary-green);
+    background: var(--primary-gold);
     color: var(--bg-darker);
     box-shadow: var(--shadow-glow-intense);
     transform: scale(1.05);
@@ -271,20 +245,21 @@ body {
 }
 
 .btn-secondary {
-    border-color: var(--accent-red);
-    color: var(--accent-red);
+    background: var(--bg-darker); /* or something lighter/different */
+    border-color: var(--accent-burgundy);
+    color: var(--text-light);
 }
 
 .btn-secondary:hover {
-    background: var(--accent-red);
-    color: var(--text-bright);
-    box-shadow: 0 0 20px var(--accent-red);
+    background: var(--accent-burgundy);
+    color: var(--text-light);
+    box-shadow: 0 0 15px var(--accent-burgundy);
 }
 
 .btn-xp {
     width: 100%;
     margin-top: 1rem;
-    background: linear-gradient(45deg, var(--primary-green), var(--secondary-green));
+    background: linear-gradient(45deg, var(--primary-gold), var(--secondary-gold));
     color: var(--bg-darker);
     border: none;
     font-weight: bold;
@@ -292,8 +267,8 @@ body {
 }
 
 @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 10px var(--primary-green); }
-    50% { box-shadow: 0 0 30px var(--primary-green); }
+    0%, 100% { box-shadow: 0 0 10px var(--primary-gold); }
+    50% { box-shadow: 0 0 20px var(--primary-gold); }
 }
 
 .btn-xp:hover {
@@ -303,16 +278,16 @@ body {
 .btn-reduce {
     width: 100%;
     margin-top: 1rem;
-    background: linear-gradient(45deg, var(--accent-red), #cc0033);
-    color: var(--text-bright);
+    background: linear-gradient(45deg, var(--accent-burgundy), #660018);
+    color: var(--text-light);
     border: none;
     font-weight: bold;
-    animation: pulse-red 2s infinite;
+    animation: pulse-burgundy 2s infinite;
 }
 
-@keyframes pulse-red {
-    0%, 100% { box-shadow: 0 0 10px var(--accent-red); }
-    50% { box-shadow: 0 0 30px var(--accent-red); }
+@keyframes pulse-burgundy {
+    0%, 100% { box-shadow: 0 0 10px var(--accent-burgundy); }
+    50% { box-shadow: 0 0 20px var(--accent-burgundy); }
 }
 
 .btn-reduce:hover {
@@ -320,10 +295,10 @@ body {
 }
 
 /* ==========================================
-   FLOATING WOJAKS
+   FLOATING ORNAMENTS
    ========================================== */
 
-.floating-wojaks {
+.floating-ornaments {
     position: fixed;
     top: 0;
     left: 0;
@@ -333,29 +308,30 @@ body {
     z-index: 0;
 }
 
-.wojak {
+.ornament {
     position: absolute;
-    font-size: 3rem;
-    opacity: 0.3;
-    animation: float 10s infinite ease-in-out;
+    font-size: 2rem;
+    opacity: 0.2;
+    color: var(--primary-gold);
+    animation: float 12s infinite ease-in-out;
 }
 
-.wojak-1 { top: 10%; left: 10%; animation-delay: 0s; }
-.wojak-2 { top: 20%; right: 15%; animation-delay: 2s; }
-.wojak-3 { bottom: 20%; left: 20%; animation-delay: 4s; }
-.wojak-4 { bottom: 30%; right: 10%; animation-delay: 6s; }
-.wojak-5 { top: 50%; left: 50%; animation-delay: 8s; }
+.ornament-1 { top: 10%; left: 10%; animation-delay: 0s; }
+.ornament-2 { top: 20%; right: 15%; animation-delay: 2s; }
+.ornament-3 { bottom: 20%; left: 20%; animation-delay: 4s; }
+.ornament-4 { bottom: 30%; right: 10%; animation-delay: 6s; }
+.ornament-5 { top: 50%; left: 50%; animation-delay: 8s; }
 
 @keyframes float {
     0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-30px) rotate(5deg); }
+    50% { transform: translateY(-20px) rotate(3deg); }
 }
 
 .login-footer {
     text-align: center;
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 1px solid var(--primary-green);
+    border-top: 1px solid var(--primary-gold);
 }
 
 /* ==========================================
@@ -368,11 +344,11 @@ body {
     left: 50%;
     transform: translateX(-50%);
     background: var(--bg-dark);
-    border: 3px solid var(--primary-green);
+    border: 3px solid var(--primary-gold);
     padding: 1.5rem 3rem;
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'Cinzel', serif;
     font-size: 1rem;
-    color: var(--primary-green);
+    color: var(--primary-gold);
     z-index: 10000;
     box-shadow: var(--shadow-glow-intense);
     transition: top 0.5s ease;
@@ -383,22 +359,22 @@ body {
 }
 
 .notification.success {
-    border-color: var(--primary-green);
-    color: var(--primary-green);
-    box-shadow: 0 0 40px var(--primary-green);
+    border-color: var(--primary-gold);
+    color: var(--primary-gold);
+    box-shadow: 0 0 25px var(--primary-gold);
 }
 
 .notification.error {
-    border-color: var(--accent-red);
-    color: var(--accent-red);
-    box-shadow: 0 0 40px var(--accent-red);
+    border-color: var(--accent-burgundy);
+    color: var(--accent-burgundy);
+    box-shadow: 0 0 25px var(--accent-burgundy);
     animation: shake 0.5s;
 }
 
 @keyframes shake {
     0%, 100% { transform: translateX(-50%) translateY(0); }
-    25% { transform: translateX(-50%) translateY(-10px); }
-    75% { transform: translateX(-50%) translateY(10px); }
+    25% { transform: translateX(-50%) translateY(-8px); }
+    75% { transform: translateX(-50%) translateY(8px); }
 }
 
 /* ==========================================
@@ -407,13 +383,7 @@ body {
 
 .game-page {
     min-height: 100vh;
-    background: 
-        repeating-linear-gradient(
-            90deg,
-            var(--bg-darker) 0px,
-            var(--bg-dark) 2px,
-            var(--bg-darker) 4px
-        );
+    background: var(--bg-darker);
 }
 
 .game-header {
@@ -421,9 +391,9 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem 3rem;
-    background: rgba(0, 0, 0, 0.95);
-    border-bottom: 3px solid var(--primary-green);
-    box-shadow: 0 4px 20px rgba(0, 255, 65, 0.3);
+    background: rgba(30, 24, 22, 0.95);
+    border-bottom: 3px solid var(--primary-gold);
+    box-shadow: 0 4px 20px rgba(212, 160, 23, 0.3);
 }
 
 .header-left h1 {
@@ -466,10 +436,10 @@ body {
 }
 
 .screen-title {
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'Cinzel', serif;
     font-size: 2rem;
-    color: var(--primary-green);
-    text-shadow: 0 0 20px var(--primary-green);
+    color: var(--primary-gold);
+    text-shadow: 0 0 15px var(--primary-gold);
     margin-bottom: 1rem;
 }
 
@@ -491,8 +461,8 @@ body {
 }
 
 .character-card {
-    background: linear-gradient(145deg, rgba(0, 0, 0, 0.9), rgba(13, 13, 13, 0.9));
-    border: 3px solid var(--primary-green);
+    background: linear-gradient(145deg, rgba(30, 24, 22, 0.9), rgba(46, 42, 39, 0.9));
+    border: 3px solid var(--primary-gold);
     border-radius: 10px;
     padding: 2rem;
     cursor: pointer;
@@ -508,7 +478,7 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(0, 255, 65, 0.1), transparent);
+    background: linear-gradient(45deg, transparent, rgba(212, 160, 23, 0.1), transparent);
     transform: rotate(45deg);
     transition: all 0.6s ease;
 }
@@ -519,14 +489,14 @@ body {
 
 .character-card:hover {
     transform: translateY(-10px) scale(1.05);
-    border-color: var(--accent-blue);
-    box-shadow: 0 10px 40px rgba(0, 212, 255, 0.5);
+    border-color: var(--accent-ivory);
+    box-shadow: 0 10px 40px rgba(248, 231, 201, 0.5);
 }
 
 .character-card-portrait {
     width: 100%;
     height: 200px;
-    border: 2px solid var(--primary-green);
+    border: 2px solid var(--primary-gold);
     margin-bottom: 1.5rem;
     position: relative;
     overflow: hidden;
@@ -545,14 +515,14 @@ body {
 }
 
 .character-card-name {
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'Cinzel', serif;
     font-size: 1.3rem;
-    color: var(--primary-green);
+    color: var(--primary-gold);
     margin-bottom: 0.5rem;
 }
 
 .character-card-class {
-    color: var(--accent-blue);
+    color: var(--accent-ivory);
     font-size: 1.2rem;
     margin-bottom: 1rem;
 }
@@ -563,11 +533,11 @@ body {
     align-items: center;
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid var(--primary-green);
+    border-top: 1px solid var(--primary-gold);
 }
 
 .level-badge {
-    background: var(--primary-green);
+    background: var(--primary-gold);
     color: var(--bg-darker);
     padding: 0.5rem 1rem;
     border-radius: 5px;
@@ -575,7 +545,7 @@ body {
 }
 
 .xp-badge {
-    color: var(--accent-yellow);
+    color: var(--accent-ivory);
     font-size: 1.1rem;
 }
 
@@ -590,8 +560,8 @@ body {
 }
 
 .panel {
-    background: rgba(0, 0, 0, 0.9);
-    border: 3px solid var(--primary-green);
+    background: rgba(30, 24, 22, 0.9);
+    border: 3px solid var(--primary-gold);
     border-radius: 10px;
     padding: 2rem;
     box-shadow: var(--shadow-glow);
@@ -603,13 +573,13 @@ body {
     align-items: center;
     margin-bottom: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 2px solid var(--primary-green);
+    border-bottom: 2px solid var(--primary-gold);
 }
 
 .panel-header h3 {
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'Cinzel', serif;
     font-size: 1.2rem;
-    color: var(--primary-green);
+    color: var(--primary-gold);
 }
 
 /* ==========================================
@@ -630,7 +600,7 @@ body {
 .character-portrait {
     width: 200px;
     height: 200px;
-    border: 3px solid var(--primary-green);
+    border: 3px solid var(--primary-gold);
     border-radius: 10px;
     box-shadow: var(--shadow-glow);
     overflow: hidden;
@@ -669,14 +639,14 @@ body {
 }
 
 .char-name {
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'Cinzel', serif;
     font-size: 1.5rem;
-    color: var(--primary-green);
+    color: var(--primary-gold);
     margin-bottom: 0.5rem;
 }
 
 .char-class {
-    color: var(--accent-blue);
+    color: var(--accent-ivory);
     font-size: 1.3rem;
     margin-bottom: 1rem;
 }
@@ -690,8 +660,8 @@ body {
 /* LEVEL DISPLAY */
 
 .level-display {
-    background: rgba(0, 0, 0, 0.5);
-    border: 2px solid var(--primary-green);
+    background: rgba(30, 24, 22, 0.5);
+    border: 2px solid var(--primary-gold);
     padding: 1.5rem;
     border-radius: 5px;
 }
@@ -709,10 +679,10 @@ body {
 }
 
 .level-number {
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'Cinzel', serif;
     font-size: 2rem;
-    color: var(--accent-yellow);
-    text-shadow: 0 0 10px var(--accent-yellow);
+    color: var(--accent-ivory);
+    text-shadow: 0 0 10px var(--accent-ivory);
 }
 
 .xp-bar-container {
@@ -722,8 +692,8 @@ body {
 .xp-bar {
     width: 100%;
     height: 30px;
-    background: rgba(0, 0, 0, 0.8);
-    border: 2px solid var(--primary-green);
+    background: rgba(30, 24, 22, 0.8);
+    border: 2px solid var(--primary-gold);
     border-radius: 5px;
     overflow: hidden;
     position: relative;
@@ -731,9 +701,9 @@ body {
 
 .xp-progress {
     height: 100%;
-    background: linear-gradient(90deg, var(--primary-green), var(--accent-yellow));
+    background: linear-gradient(90deg, var(--primary-gold), var(--accent-ivory));
     transition: width 0.5s ease;
-    box-shadow: 0 0 20px var(--primary-green);
+    box-shadow: 0 0 15px var(--primary-gold);
     animation: xp-shine 2s infinite;
 }
 
@@ -752,15 +722,15 @@ body {
 /* STATS DISPLAY */
 
 .stats-display {
-    background: rgba(0, 0, 0, 0.5);
-    border: 2px solid var(--primary-green);
+    background: rgba(30, 24, 22, 0.5);
+    border: 2px solid var(--primary-gold);
     padding: 1.5rem;
     border-radius: 5px;
 }
 
 .stats-display h4 {
-    font-family: 'Press Start 2P', monospace;
-    color: var(--primary-green);
+    font-family: 'Cinzel', serif;
+    color: var(--primary-gold);
     margin-bottom: 1rem;
     text-align: center;
 }
@@ -776,8 +746,8 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 0.8rem;
-    background: rgba(0, 255, 65, 0.05);
-    border: 1px solid var(--primary-green);
+    background: rgba(212, 160, 23, 0.05);
+    border: 1px solid var(--primary-gold);
     border-radius: 3px;
 }
 
@@ -787,7 +757,7 @@ body {
 }
 
 .stat-value {
-    color: var(--accent-yellow);
+    color: var(--accent-ivory);
     font-size: 1.3rem;
     font-weight: bold;
 }
@@ -803,22 +773,21 @@ body {
 }
 
 .panel.equipment-display {
-    max-width: 1000px; /* limit width so it’s not super long */
+    max-width: 1000px;
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-/* Make filter tabs wrap nicely if screen is small */
 .panel.equipment-display .filter-tabs {
     flex-wrap: wrap;
     gap: 0.5rem;
-    justify-content: center; /* center tabs horizontally */
+    justify-content: center;
 }
 
 .equipment-slot {
-    background: rgba(0, 0, 0, 0.5);
-    border: 3px solid var(--primary-green);
+    background: rgba(30, 24, 22, 0.5);
+    border: 3px solid var(--primary-gold);
     border-radius: 10px;
     padding: 1.5rem;
     text-align: center;
@@ -829,8 +798,8 @@ body {
 }
 
 .equipment-slot:hover {
-    border-color: var(--accent-blue);
-    box-shadow: 0 0 20px var(--accent-blue);
+    border-color: var(--accent-ivory);
+    box-shadow: 0 0 15px var(--accent-ivory);
     transform: scale(1.05);
 }
 
@@ -840,8 +809,8 @@ body {
 }
 
 .slot-label {
-    font-family: 'Press Start 2P', monospace;
-    color: var(--primary-green);
+    font-family: 'Cinzel', serif;
+    color: var(--primary-gold);
     font-size: 0.9rem;
     margin-bottom: 1rem;
 }
@@ -860,39 +829,39 @@ body {
 }
 
 .equipped-item {
-    background: linear-gradient(145deg, rgba(0, 255, 65, 0.1), rgba(0, 212, 255, 0.1));
-    border: 2px solid var(--accent-blue);
+    background: linear-gradient(145deg, rgba(212, 160, 23, 0.1), rgba(248, 231, 201, 0.1));
+    border: 2px solid var(--accent-ivory);
     border-radius: 5px;
     padding: 1rem;
 }
 
 .equipped-item-name {
-    color: var(--accent-blue);
+    color: var(--accent-ivory);
     font-size: 1.1rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
 }
 
 .equipped-item-level {
-    color: var(--accent-yellow);
+    color: var(--accent-ivory);
     font-size: 0.9rem;
 }
 
 .unequip-btn {
     margin-top: 0.5rem;
     padding: 0.5rem 1rem;
-    background: var(--accent-red);
-    color: var(--text-bright);
+    background: var(--accent-burgundy);
+    color: var(--text-light);
     border: none;
     cursor: pointer;
-    font-family: 'VT323', monospace;
+    font-family: 'Cormorant Garamond', serif;
     font-size: 1rem;
     transition: all 0.3s ease;
 }
 
 .unequip-btn:hover {
-    background: #ff3366;
-    box-shadow: 0 0 15px var(--accent-red);
+    background: #660018;
+    box-shadow: 0 0 15px var(--accent-burgundy);
 }
 
 /* ==========================================
@@ -907,24 +876,24 @@ body {
 
 .filter-tab {
     padding: 0.5rem 1rem;
-    background: rgba(0, 0, 0, 0.5);
-    border: 2px solid var(--primary-green);
-    color: var(--primary-green);
-    font-family: 'VT323', monospace;
+    background: rgba(30, 24, 22, 0.5);
+    border: 2px solid var(--primary-gold);
+    color: var(--primary-gold);
+    font-family: 'Cormorant Garamond', serif;
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .filter-tab:hover {
-    background: var(--primary-green);
+    background: var(--primary-gold);
     color: var(--bg-darker);
 }
 
 .filter-tab.active {
-    background: var(--primary-green);
+    background: var(--primary-gold);
     color: var(--bg-darker);
-    box-shadow: 0 0 15px var(--primary-green);
+    box-shadow: 0 0 15px var(--primary-gold);
 }
 
 .equipment-inventory {
@@ -933,28 +902,27 @@ body {
     padding-right: 1rem;
 }
 
-/* Custom Scrollbar */
 .equipment-inventory::-webkit-scrollbar {
     width: 10px;
 }
 
 .equipment-inventory::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid var(--primary-green);
+    background: rgba(30, 24, 22, 0.5);
+    border: 1px solid var(--primary-gold);
 }
 
 .equipment-inventory::-webkit-scrollbar-thumb {
-    background: var(--primary-green);
-    box-shadow: 0 0 10px var(--primary-green);
+    background: var(--primary-gold);
+    box-shadow: 0 0 10px var(--primary-gold);
 }
 
 .equipment-inventory::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-blue);
+    background: var(--accent-ivory);
 }
 
 .equipment-item {
-    background: rgba(0, 0, 0, 0.7);
-    border: 2px solid var(--primary-green);
+    background: rgba(30, 24, 22, 0.7);
+    border: 2px solid var(--primary-gold);
     border-radius: 5px;
     padding: 1.5rem;
     margin-bottom: 1rem;
@@ -964,8 +932,8 @@ body {
 }
 
 .equipment-item:hover {
-    border-color: var(--accent-blue);
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    border-color: var(--accent-ivory);
+    box-shadow: 0 0 15px rgba(248, 231, 201, 0.3);
     transform: translateX(5px);
 }
 
@@ -979,8 +947,8 @@ body {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: var(--accent-red);
-    color: var(--text-bright);
+    background: var(--accent-burgundy);
+    color: var(--text-light);
     padding: 0.3rem 0.8rem;
     border-radius: 3px;
     font-size: 0.8rem;
@@ -994,9 +962,9 @@ body {
 }
 
 .item-name {
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'Cinzel', serif;
     font-size: 1.1rem;
-    color: var(--primary-green);
+    color: var(--primary-gold);
 }
 
 .item-info {
@@ -1014,9 +982,9 @@ body {
 }
 
 .bonus-badge {
-    background: rgba(0, 255, 65, 0.2);
-    border: 1px solid var(--primary-green);
-    color: var(--primary-green);
+    background: rgba(212, 160, 23, 0.2);
+    border: 1px solid var(--primary-gold);
+    color: var(--primary-gold);
     padding: 0.3rem 0.8rem;
     border-radius: 3px;
     font-size: 0.9rem;
@@ -1046,7 +1014,7 @@ body {
 
 .modal-content {
     background: var(--bg-dark);
-    border: 3px solid var(--primary-green);
+    border: 3px solid var(--primary-gold);
     border-radius: 10px;
     max-width: 600px;
     width: 90%;
@@ -1064,26 +1032,26 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 2rem;
-    border-bottom: 2px solid var(--primary-green);
+    border-bottom: 2px solid var(--primary-gold);
 }
 
 .modal-header h3 {
-    font-family: 'Press Start 2P', monospace;
-    color: var(--primary-green);
+    font-family: 'Cinzel', serif;
+    color: var(--primary-gold);
     font-size: 1.3rem;
 }
 
 .modal-close {
     background: none;
     border: none;
-    color: var(--accent-red);
+    color: var(--accent-burgundy);
     font-size: 2rem;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .modal-close:hover {
-    color: var(--text-bright);
+    color: var(--text-light);
     transform: rotate(90deg);
 }
 
@@ -1096,7 +1064,7 @@ body {
     gap: 1rem;
     justify-content: flex-end;
     padding: 2rem;
-    border-top: 2px solid var(--primary-green);
+    border-top: 2px solid var(--primary-gold);
 }
 
 /* ==========================================
@@ -1106,7 +1074,7 @@ body {
 .level-up-modal .level-up-content {
     text-align: center;
     padding: 3rem;
-    background: radial-gradient(circle, rgba(255, 255, 0, 0.1), var(--bg-dark));
+    background: radial-gradient(circle, rgba(212, 160, 23, 0.1), var(--bg-dark));
 }
 
 .level-up-animation {
@@ -1123,7 +1091,7 @@ body {
     height: 300px;
     background: repeating-conic-gradient(
         from 0deg,
-        var(--accent-yellow) 0deg 10deg,
+        var(--accent-ivory) 0deg 10deg,
         transparent 10deg 20deg
     );
     animation: rotate-rays 3s linear infinite;
@@ -1152,10 +1120,10 @@ body {
 }
 
 .new-level {
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'Cinzel', serif;
     font-size: 2rem;
-    color: var(--accent-yellow);
-    text-shadow: 0 0 30px var(--accent-yellow);
+    color: var(--accent-ivory);
+    text-shadow: 0 0 20px var(--accent-ivory);
 }
 
 .level-up-sparkles {
@@ -1188,7 +1156,7 @@ body {
         padding: 1rem;
     }
     
-    .glitch-text {
+    .ornate-text {
         font-size: 1.5rem;
     }
     
@@ -1208,71 +1176,62 @@ body {
 /* --- CHARACTER CARD STYLES --- */
 
 .character-card {
-    /* ... existing styles ... */
-    display: flex; /* Make it a flex container */
-    flex-direction: column; /* Stack contents vertically */
-    justify-content: space-between; /* Push elements apart */
-    padding-bottom: 10px; /* Add some padding at the bottom */
-    height: auto; /* Allow height to adjust */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    height: auto;
 }
 
 .character-card-level-row {
-    display: flex; /* Use flexbox to align level and reset button */
-    justify-content: space-between; /* Space out the two items */
-    align-items: center; /* Vertically align them */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    margin-top: 8px; /* Space from the class name above */
+    margin-top: 8px;
 }
 
 .character-card-level {
-    /* Retain original level styling for the badges */
     display: flex;
     gap: 5px;
 }
 
 .reset-char-btn {
-    /* Base Button Styling from other buttons (Press Start 2P, etc.) */
     position: relative;
-    padding: 0.5rem 1rem; /* Adjust padding for better fit */
-    font-family: 'Press Start 2P', monospace;
-    font-size: 0.7rem; /* Keep it small to fit in the card */
+    padding: 0.5rem 1rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     cursor: pointer;
     transition: all 0.2s ease;
     overflow: hidden;
-    line-height: 1; /* Ensure text is vertically centered */
-    white-space: nowrap; /* Prevent text wrap */
-
-    /* Critical Theme: Red and Dark */
+    line-height: 1;
+    white-space: nowrap;
     background: var(--bg-darker);
-    color: var(--accent-red);
-    border: 2px solid var(--accent-red);
-    box-shadow: 0 0 10px rgba(255, 0, 64, 0.5); /* Subtle red glow */
+    color: var(--text-light);
+    border: 2px solid var(--accent-burgundy);
+    box-shadow: 0 0 10px rgba(128, 0, 32, 0.5);
 }
 
 .reset-char-btn:hover {
-    /* Intense Feedback on Hover (Danger/Wipeout) */
-    background: var(--accent-red);
-    color: var(--text-bright); /* White text on red background */
-    box-shadow: 0 0 20px var(--accent-red); /* Stronger red glow */
+    background: var(--accent-burgundy);
+    color: var(--text-light);
+    box-shadow: 0 0 15px var(--accent-burgundy);
     transform: scale(1.05);
-    /* Add a slight text glitch effect on hover */
-    text-shadow: 1px 1px var(--accent-blue), -1px -1px var(--accent-yellow);
+    text-shadow: 1px 1px var(--accent-ivory);
 }
 
 .reset-char-btn:active {
-    /* Push-down effect */
     transform: scale(0.95);
-    background: #cc0033; /* Darker red on press */
+    background: #660018;
     box-shadow: none;
 }
 
-
 @keyframes reset-flash {
-    0% { background: rgba(255, 0, 64, 0.2); }
-    50% { background: rgba(255, 0, 64, 0.5); }
-    100% { background: rgba(255, 0, 64, 0.2); }
+    0% { background: rgba(128, 0, 32, 0.2); }
+    50% { background: rgba(128, 0, 32, 0.5); }
+    100% { background: rgba(128, 0, 32, 0.2); }
 }
 
 /* ==========================================
@@ -1280,8 +1239,8 @@ body {
    ========================================== */
 
 #deleteModalTitle {
-    color: var(--accent-red);
-    text-shadow: 0 0 15px var(--accent-red);
+    color: var(--text-light);
+    text-shadow: 0 0 15px var(--accent-burgundy);
 }
 
 #deleteConfirmModal .modal-body p {
@@ -1291,28 +1250,27 @@ body {
 }
 
 #deleteCharName {
-    color: var(--accent-yellow);
-    font-family: 'Press Start 2P', monospace;
+    color: var(--accent-ivory);
+    font-family: 'Cinzel', serif;
 }
 
-/* New Danger Button Style */
 .btn-danger {
     position: relative;
     padding: 1rem 2rem;
-    font-family: 'Press Start 2P', monospace;
+    font-family: 'Cinzel', serif;
     font-size: 1rem;
-    background: var(--accent-red);
-    color: var(--text-bright);
+    background: var(--accent-burgundy);
+    color: var(--text-light);
     border: none;
     cursor: pointer;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     transition: all 0.3s ease;
-    box-shadow: 0 0 20px var(--accent-red);
+    box-shadow: 0 0 15px var(--accent-burgundy);
 }
 
 .btn-danger:hover {
-    box-shadow: 0 0 40px var(--accent-red);
+    box-shadow: 0 0 25px var(--accent-burgundy);
     transform: scale(1.05);
     filter: brightness(1.2);
 }
@@ -1321,12 +1279,12 @@ body {
     transform: scale(0.98);
 }
 
-/* Secondary button override for cancel */
 #cancelDeleteBtn {
     background: transparent;
     border: 2px solid var(--text-dim);
     color: var(--text-dim);
 }
+
 #cancelDeleteBtn:hover {
     background: var(--text-dim);
     color: var(--bg-darker);
@@ -1345,7 +1303,7 @@ body {
     height: 100%;
     z-index: -1;
     overflow: hidden;
-    background: #000;
+    background: var(--bg-darker);
 }
 
 .background-slide {
@@ -1356,72 +1314,48 @@ body {
     height: 100%;
     opacity: 0;
     transition: opacity 2s ease-in-out;
-    background-size: 100%;
+    background-size: cover;
     background-position: center;
-    filter: brightness(0.5);
+    filter: brightness(0.7);
 }
 
 .background-slide.active {
     opacity: 1;
 }
 
-/* Ken Burns effect animations - More varied */
 @keyframes panZoomInTopLeft {
     0% { transform: scale(1) translate(0, 0); }
-    100% { transform: scale(1.4) translate(-8%, -8%); }
+    100% { transform: scale(1.3) translate(-5%, -5%); }
 }
 
 @keyframes panZoomInBottomRight {
     0% { transform: scale(1) translate(0, 0); }
-    100% { transform: scale(1.4) translate(8%, 8%); }
+    100% { transform: scale(1.3) translate(5%, 5%); }
 }
 
 @keyframes panLeftSlow {
-    0% { transform: scale(1.3) translateX(5%); }
-    100% { transform: scale(1.3) translateX(-15%); }
+    0% { transform: scale(1.2) translateX(5%); }
+    100% { transform: scale(1.2) translateX(-10%); }
 }
 
 @keyframes panRightFast {
-    0% { transform: scale(1.25) translateX(-12%); }
-    100% { transform: scale(1.25) translateX(8%); }
+    0% { transform: scale(1.2) translateX(-10%); }
+    100% { transform: scale(1.2) translateX(5%); }
 }
 
 @keyframes panUpDiagonal {
-    0% { transform: scale(1.3) translate(5%, 8%); }
-    100% { transform: scale(1.3) translate(-5%, -12%); }
+    0% { transform: scale(1.2) translate(5%, 5%); }
+    100% { transform: scale(1.2) translate(-5%, -10%); }
 }
 
 @keyframes panDownDiagonal {
-    0% { transform: scale(1.3) translate(-8%, -10%); }
-    100% { transform: scale(1.3) translate(8%, 5%); }
+    0% { transform: scale(1.2) translate(-5%, -10%); }
+    100% { transform: scale(1.2) translate(5%, 5%); }
 }
 
 @keyframes zoomInOutCenter {
     0%, 100% { transform: scale(1) translate(0, 0); }
-    50% { transform: scale(1.5) translate(0, 0); }
-}
-
-@keyframes zoomRotateLeft {
-    0% { transform: scale(1.1) translate(5%, 0) rotate(0deg); }
-    100% { transform: scale(1.4) translate(-10%, -5%) rotate(-2deg); }
-}
-
-@keyframes zoomRotateRight {
-    0% { transform: scale(1.1) translate(-5%, 0) rotate(0deg); }
-    100% { transform: scale(1.4) translate(10%, 5%) rotate(2deg); }
-}
-
-@keyframes spiralZoom {
-    0% { transform: scale(1) translate(8%, -8%) rotate(0deg); }
-    50% { transform: scale(1.5) translate(0, 0) rotate(1deg); }
-    100% { transform: scale(1.2) translate(-8%, 8%) rotate(0deg); }
-}
-
-@keyframes complexPan {
-    0% { transform: scale(1.2) translate(-5%, 8%); }
-    33% { transform: scale(1.4) translate(5%, 0%); }
-    66% { transform: scale(1.3) translate(-3%, -8%); }
-    100% { transform: scale(1.2) translate(8%, 5%); }
+    50% { transform: scale(1.4) translate(0, 0); }
 }
 
 .background-slide.anim-panZoomIn { animation: panZoomInTopLeft 18s ease-in-out infinite alternate; }
@@ -1431,10 +1365,9 @@ body {
 .background-slide.anim-panDown { animation: panDownDiagonal 17s ease-in-out infinite alternate; }
 .background-slide.anim-zoomInOut { animation: zoomInOutCenter 22s ease-in-out infinite; }
 
-/* Additional animation variations for more randomness */
-.background-slide:nth-child(7) { animation: zoomRotateLeft 21s ease-in-out infinite alternate !important; }
-.background-slide:nth-child(9) { animation: complexPan 23s ease-in-out infinite !important; }
-.background-slide:nth-child(10) { animation: zoomRotateRight 19s ease-in-out infinite alternate !important; }
+.background-slide:nth-child(7) { animation: zoomInOutCenter 21s ease-in-out infinite alternate !important; }
+.background-slide:nth-child(9) { animation: panDownDiagonal 23s ease-in-out infinite !important; }
+.background-slide:nth-child(10) { animation: panUpDiagonal 19s ease-in-out infinite alternate !important; }
 .background-slide:nth-child(11) { animation: panZoomInBottomRight 20s ease-in-out infinite alternate !important; }
 
 /* Responsive positioning */
