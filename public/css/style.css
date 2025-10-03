@@ -101,46 +101,55 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: 
-        radial-gradient(circle at 20% 80%, rgba(0, 255, 65, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255, 0, 64, 0.05) 0%, transparent 50%),
-        var(--bg-darker);
 }
 
 .login-container {
     position: relative;
     z-index: 1;
+    animation: fadeSlideUp 1.2s ease-out;
 }
 
+
 .login-card {
-    background: rgba(13, 13, 13, 0.95);
-    border: 3px solid var(--border-color);
-    border-radius: 10px;
-    padding: 3rem;
-    max-width: 500px;
-    box-shadow: var(--shadow-glow-intense);
-    position: relative;
-    overflow: hidden;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5.5px);
+  border: 2px solid rgba(0, 255, 65, 0.6);
+  border-radius: 15px;
+  padding: 3rem;
+  max-width: 500px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5),
+              0 0 60px rgba(0, 255, 65, 0.2),
+              inset 0 0 80px rgba(0, 255, 65, 0.03);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+
+.login-card:hover {
+    background: rgba(0, 0, 0, 0.5);
+    border-color: rgba(0, 255, 65, 0.8);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 
+                0 0 80px rgba(0, 255, 65, 0.3),
+                inset 0 0 80px rgba(0, 255, 65, 0.05);
 }
 
 .login-card::before {
     content: '';
     position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(45deg, var(--primary-green), var(--accent-red), var(--accent-blue), var(--primary-green));
-    background-size: 400% 400%;
-    animation: border-glow 3s ease infinite;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(0, 255, 65, 0.08) 0%, transparent 70%);
+    animation: subtlePulse 4s ease-in-out infinite;
     z-index: -1;
-    border-radius: 10px;
-    opacity: 0.5;
+    pointer-events: none;
 }
 
-@keyframes border-glow {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+@keyframes subtlePulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
 }
 
 .login-header {
@@ -309,7 +318,6 @@ body {
 .btn-reduce:hover {
     transform: scale(1.1);
 }
-
 
 /* ==========================================
    FLOATING WOJAKS
@@ -1326,49 +1334,91 @@ body {
     height: 100%;
     opacity: 0;
     transition: opacity 2s ease-in-out;
-    background-size: cover;
+    background-size: 100%;
     background-position: center;
-    filter: brightness(0.4);
+    filter: brightness(0.5);
 }
 
 .background-slide.active {
     opacity: 1;
 }
 
-/* Ken Burns effect animations */
-@keyframes panZoomIn {
+/* Ken Burns effect animations - More varied */
+@keyframes panZoomInTopLeft {
     0% { transform: scale(1) translate(0, 0); }
-    100% { transform: scale(1.3) translate(-5%, -5%); }
+    100% { transform: scale(1.4) translate(-8%, -8%); }
 }
 
-@keyframes panLeft {
-    0% { transform: scale(1.2) translateX(0); }
-    100% { transform: scale(1.2) translateX(-10%); }
+@keyframes panZoomInBottomRight {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.4) translate(8%, 8%); }
 }
 
-@keyframes panRight {
-    0% { transform: scale(1.2) translateX(-10%); }
-    100% { transform: scale(1.2) translateX(0); }
+@keyframes panLeftSlow {
+    0% { transform: scale(1.3) translateX(5%); }
+    100% { transform: scale(1.3) translateX(-15%); }
 }
 
-@keyframes panUp {
-    0% { transform: scale(1.2) translateY(0); }
-    100% { transform: scale(1.2) translateY(-10%); }
+@keyframes panRightFast {
+    0% { transform: scale(1.25) translateX(-12%); }
+    100% { transform: scale(1.25) translateX(8%); }
 }
 
-@keyframes panDown {
-    0% { transform: scale(1.2) translateY(-10%); }
-    100% { transform: scale(1.2) translateY(0); }
+@keyframes panUpDiagonal {
+    0% { transform: scale(1.3) translate(5%, 8%); }
+    100% { transform: scale(1.3) translate(-5%, -12%); }
 }
 
-@keyframes zoomInOut {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.3); }
+@keyframes panDownDiagonal {
+    0% { transform: scale(1.3) translate(-8%, -10%); }
+    100% { transform: scale(1.3) translate(8%, 5%); }
 }
 
-.background-slide.anim-panZoomIn { animation: panZoomIn 15s ease-in-out infinite alternate; }
-.background-slide.anim-panLeft { animation: panLeft 15s ease-in-out infinite alternate; }
-.background-slide.anim-panRight { animation: panRight 15s ease-in-out infinite alternate; }
-.background-slide.anim-panUp { animation: panUp 15s ease-in-out infinite alternate; }
-.background-slide.anim-panDown { animation: panDown 15s ease-in-out infinite alternate; }
-.background-slide.anim-zoomInOut { animation: zoomInOut 15s ease-in-out infinite; }
+@keyframes zoomInOutCenter {
+    0%, 100% { transform: scale(1) translate(0, 0); }
+    50% { transform: scale(1.5) translate(0, 0); }
+}
+
+@keyframes zoomRotateLeft {
+    0% { transform: scale(1.1) translate(5%, 0) rotate(0deg); }
+    100% { transform: scale(1.4) translate(-10%, -5%) rotate(-2deg); }
+}
+
+@keyframes zoomRotateRight {
+    0% { transform: scale(1.1) translate(-5%, 0) rotate(0deg); }
+    100% { transform: scale(1.4) translate(10%, 5%) rotate(2deg); }
+}
+
+@keyframes spiralZoom {
+    0% { transform: scale(1) translate(8%, -8%) rotate(0deg); }
+    50% { transform: scale(1.5) translate(0, 0) rotate(1deg); }
+    100% { transform: scale(1.2) translate(-8%, 8%) rotate(0deg); }
+}
+
+@keyframes complexPan {
+    0% { transform: scale(1.2) translate(-5%, 8%); }
+    33% { transform: scale(1.4) translate(5%, 0%); }
+    66% { transform: scale(1.3) translate(-3%, -8%); }
+    100% { transform: scale(1.2) translate(8%, 5%); }
+}
+
+.background-slide.anim-panZoomIn { animation: panZoomInTopLeft 18s ease-in-out infinite alternate; }
+.background-slide.anim-panLeft { animation: panLeftSlow 20s ease-in-out infinite alternate; }
+.background-slide.anim-panRight { animation: panRightFast 16s ease-in-out infinite alternate; }
+.background-slide.anim-panUp { animation: panUpDiagonal 19s ease-in-out infinite alternate; }
+.background-slide.anim-panDown { animation: panDownDiagonal 17s ease-in-out infinite alternate; }
+.background-slide.anim-zoomInOut { animation: zoomInOutCenter 22s ease-in-out infinite; }
+
+/* Additional animation variations for more randomness */
+.background-slide:nth-child(7) { animation: zoomRotateLeft 21s ease-in-out infinite alternate !important; }
+.background-slide:nth-child(9) { animation: complexPan 23s ease-in-out infinite !important; }
+.background-slide:nth-child(10) { animation: zoomRotateRight 19s ease-in-out infinite alternate !important; }
+.background-slide:nth-child(11) { animation: panZoomInBottomRight 20s ease-in-out infinite alternate !important; }
+
+/* Responsive positioning */
+@media (max-width: 768px) {
+    .login-card {
+        padding: 2rem;
+        max-width: 90%;
+    }
+}
