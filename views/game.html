@@ -133,11 +133,9 @@
     <div id="levelUpModal" class="modal level-up-modal">
       <div class="modal-content level-up-content">
         <div class="level-up-animation">
-          <div class="level-up-rays"></div>
           <div class="level-up-text">
             <h2>Level Up!</h2>
             <div class="new-level" id="newLevelNum"></div>
-            <div class="level-up-sparkles">✨✨✨</div>
           </div>
         </div>
       </div>
@@ -176,9 +174,9 @@
     <div class="scan-line"></div>
     <!-- SQL QUERY TERMINAL -->
     <div class="sql-terminal minimized" id="sqlTerminal">
-      <div class="sql-terminal-header">
-        <h4 onclick="toggleSQLTerminal()">SQL QUERY LOG</h4>
-        <button class="sql-terminal-toggle" onclick="toggleSQLTerminal()">
+      <div class="sql-terminal-header" onclick="toggleSQLTerminal()">
+        <h4>SQL QUERY LOG</h4>
+        <button class="sql-terminal-toggle">
           ▼
         </button>
       </div>

@@ -167,27 +167,31 @@ app.get('/api/characters', async (req, res) => {
     
     try {
         // Get all character templates with player's progress
-        const [templates] = await pool.query(`
+        const [templates] = await pool.query(
+          `
     SELECT 
         ct.template_id,
         ct.name,
         ct.class_id,
         ct.description,
-        ct.image, -- Added image column
+        ct.image,
         cl.class_name,
         c.char_id,
         c.level_id,
         c.xp,
         l.level_num,
-        l.xp_required AS xp_for_next_level,
+        COALESCE(next_level.xp_required, 9999) AS xp_for_next_level,
         CASE WHEN c.char_id IS NOT NULL THEN 1 ELSE 0 END as is_owned
     FROM character_template ct
     JOIN classtable cl ON ct.class_id = cl.class_id
     LEFT JOIN charactertable c ON ct.template_id = c.template_id AND c.player_id = ?
     LEFT JOIN leveltable l ON c.level_id = l.level_id
+    LEFT JOIN leveltable next_level ON next_level.level_id = l.level_id + 1
     WHERE ct.is_active = 1
     ORDER BY ct.template_id
-`, [req.session.playerId]);
+`,
+          [req.session.playerId]
+        );
 
         console.log(`✅ FOUND ${templates.length} CHARACTER TEMPLATES`);
         res.json({ success: true, characters: templates });
@@ -268,21 +272,25 @@ app.get('/api/character/:id', async (req, res) => {
     console.log(`🎯 FETCHING DETAILS FOR CHARACTER ${charId}`);
     
     try {
-        const [characters] = await pool.query(`
+        const [characters] = await pool.query(
+          `
     SELECT 
         c.*,
         ct.name as template_name,
-        ct.image, -- Added image column
+        ct.image,
         cl.class_name,
         cl.description as class_description,
         l.level_num,
-        l.xp_required as xp_for_next_level
+        COALESCE(next_level.xp_required, 9999) as xp_for_next_level
     FROM charactertable c
     JOIN character_template ct ON c.template_id = ct.template_id
     JOIN classtable cl ON c.class_id = cl.class_id
     JOIN leveltable l ON c.level_id = l.level_id
+    LEFT JOIN leveltable next_level ON next_level.level_id = l.level_id + 1
     WHERE c.char_id = ? AND c.player_id = ?
-`, [charId, req.session.playerId]);
+`,
+          [charId, req.session.playerId]
+        );
         
         if (characters.length === 0) {
             return res.status(404).json({ error: 'Character not found or not owned' });
