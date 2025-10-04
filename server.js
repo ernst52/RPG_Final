@@ -20,6 +20,42 @@ const pool = mysql.createPool({
     queueLimit: 0
 }).promise();
 
+// SQL Query Logger - wraps pool.query to log all SQL
+const originalQuery = pool.query.bind(pool);
+let currentAPIContext = null;
+
+pool.query = function(...args) {
+    const query = args[0];
+    console.log(`🔍 SQL: ${query}`);
+    
+    // Store last queries in memory for the terminal
+    if (!global.sqlQueryLog) {
+        global.sqlQueryLog = [];
+    }
+    
+    global.sqlQueryLog.unshift({
+        query: query,
+        timestamp: new Date().toISOString(),
+        params: args[1] || [],
+        api: currentAPIContext || 'Unknown API'
+    });
+    
+    // Keep only last 100 queries
+    if (global.sqlQueryLog.length > 100) {
+        global.sqlQueryLog = global.sqlQueryLog.slice(0, 100);
+    }
+    
+    return originalQuery(...args);
+};
+
+// Middleware to track which API endpoint is executing
+app.use((req, res, next) => {
+    if (req.path.startsWith('/api/')) {
+        currentAPIContext = `${req.method} ${req.path}`;
+    }
+    next();
+});
+
 // Test database connection
 pool.query('SELECT 1')
     .then(() => console.log('✅ Database connected successfully'))
@@ -368,6 +404,27 @@ app.post('/api/unequip', async (req, res) => {
         console.error('❌ UNEQUIP ERROR:', error);
         res.status(500).json({ success: false, error: error.message });
     }
+});
+
+// API: Get recent SQL queries
+app.get('/api/sql-log', (req, res) => {
+    if (!req.session.playerId) {
+        return res.status(401).json({ error: 'Not authenticated' });
+    }
+    
+    const queries = global.sqlQueryLog || [];
+    res.json({ success: true, queries: queries.slice(0, 50) }); // Return last 50
+});
+
+// API: Clear SQL query log
+app.post('/api/sql-log/clear', (req, res) => {
+    if (!req.session.playerId) {
+        return res.status(401).json({ error: 'Not authenticated' });
+    }
+    
+    global.sqlQueryLog = [];
+    console.log('🗑️ SQL LOG CLEARED');
+    res.json({ success: true });
 });
 
 // API: Add XP to character

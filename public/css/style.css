@@ -538,7 +538,7 @@ body {
 
 .level-badge {
     background: var(--primary-gold);
-    color: var(--bg-darker);
+    color: var(--bg-lighter);
     padding: 0.5rem 1rem;
     border-radius: 5px;
     font-weight: bold;
@@ -1462,6 +1462,105 @@ body {
     word-wrap: break-word;
 }
 
+.sql-api-group {
+    margin-bottom: 1rem;
+    border: 1px solid rgba(212, 160, 23, 0.3);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.sql-api-header {
+    background: rgba(212, 160, 23, 0.1);
+    padding: 0.5rem 0.8rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.sql-api-header:hover {
+    background: rgba(212, 160, 23, 0.2);
+}
+
+.sql-api-name {
+    color: var(--primary-gold);
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.sql-api-count {
+    color: var(--text-dim);
+    font-size: 0.7rem;
+}
+
+.sql-api-toggle {
+    color: var(--primary-gold);
+    font-size: 0.8rem;
+    transition: transform 0.2s ease;
+}
+
+.sql-api-group.collapsed .sql-api-toggle {
+    transform: rotate(-90deg);
+}
+
+.sql-api-queries {
+    max-height: 500px;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.sql-api-group.collapsed .sql-api-queries {
+    max-height: 0;
+}
+
+.sql-query-entry {
+    margin: 0;
+    padding: 0.8rem;
+    border-top: 1px solid rgba(212, 160, 23, 0.1);
+}
+
+.sql-query-params {
+    color: #ff0;
+    font-size: 0.7rem;
+    margin-top: 0.2rem;
+    opacity: 0.8;
+}
+
+.sql-terminal-controls {
+    padding: 0.5rem 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(212, 160, 23, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sql-terminal.minimized .sql-terminal-controls {
+    display: none;
+}
+
+.btn-clear-log {
+    padding: 0.3rem 0.8rem;
+    background: var(--accent-burgundy);
+    color: var(--text-light);
+    border: 1px solid var(--accent-burgundy);
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-clear-log:hover {
+    background: #660018;
+    box-shadow: 0 0 10px var(--accent-burgundy);
+}
+
+.sql-query-count {
+    color: var(--text-dim);
+    font-size: 0.7rem;
+}
+
 .sql-terminal-body::-webkit-scrollbar {
     width: 8px;
 }
@@ -1472,6 +1571,13 @@ body {
 
 .sql-terminal-body::-webkit-scrollbar-thumb {
     background: var(--primary-gold);
+}
+
+.sql-query-params {
+    color: #ff0;
+    font-size: 0.7rem;
+    margin-top: 0.2rem;
+    opacity: 0.8;
 }
 
 /* New styles to manage the title and refresh button */

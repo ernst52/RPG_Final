@@ -75,7 +75,6 @@
       .data-table tr:hover {
         background: rgba(212, 160, 23, 0.15);
       }
-      
     </style>
   </head>
   <body class="game-page">
@@ -136,6 +135,10 @@
       </div>
       <div class="sql-terminal-body" id="sqlTerminalBody">
         <div style="color: var(--text-dim)">Waiting for queries...</div>
+      </div>
+      <div class="sql-terminal-controls">
+        <span class="sql-query-count" id="sqlQueryCount">0 queries</span>
+        <button class="btn-clear-log" onclick="clearSQLLog()">Clear Log</button>
       </div>
     </div>
   </body>

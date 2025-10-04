@@ -1,151 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Soyjak Party - Game</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body class="game-page">
-
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="game-page">
     <!-- HEADER -->
     <header class="game-header">
-        <div class="header-left">
-            <h1 class="glitch-text">Soyjak Survivors</h1>
-        </div>
-        <div class="header-right">
-            <button id="dashboardBtn" class="btn-secondary">Dashboard</button>
-            <button id="logoutBtn" class="btn-secondary">Logout</button>
-        </div>
+      <div class="header-left">
+        <h1 class="glitch-text">Soyjak Survivors</h1>
+      </div>
+      <div class="header-right">
+        <button id="dashboardBtn" class="btn-secondary">Dashboard</button>
+        <button id="logoutBtn" class="btn-secondary">Logout</button>
+      </div>
     </header>
 
     <!-- MAIN GAME CONTAINER -->
     <main class="game-container">
-        <!-- CHARACTER SELECTION SCREEN -->
-        <section id="characterSelection" class="screen active">
-            <div class="screen-header">
-                <div class="screen-title">Select Your Character</div>
-                <div class="screen-subtitle">Choose wisely</div>
+      <!-- CHARACTER SELECTION SCREEN -->
+      <section id="characterSelection" class="screen active">
+        <div class="screen-header">
+          <div class="screen-title">Select Your Character</div>
+          <div class="screen-subtitle">Choose wisely</div>
+        </div>
+        <div id="characterList" class="character-grid"></div>
+      </section>
+
+      <!-- GAME SCREEN -->
+      <section id="gameScreen" class="screen">
+        <div class="screen-header">
+          <div class="screen-title">Character Dashboard</div>
+          <div class="screen-subtitle">Manage your stats & equipment</div>
+        </div>
+
+        <div class="game-layout">
+          <!-- CHARACTER PANEL -->
+          <div class="panel character-display">
+            <div class="character-portrait" id="charPortrait"></div>
+            <div class="character-info">
+              <div class="char-name" id="charName"></div>
+              <div class="char-class" id="charClass"></div>
+              <div class="char-description" id="charDescription"></div>
             </div>
-            <div id="characterList" class="character-grid"></div>
-        </section>
 
-        <!-- GAME SCREEN -->
-        <section id="gameScreen" class="screen">
-            <div class="screen-header">
-                <div class="screen-title">Character Dashboard</div>
-                <div class="screen-subtitle">Manage your stats & equipment</div>
+            <div class="level-display">
+              <div class="level-info">
+                <span class="level-label">Level</span>
+                <span class="level-number" id="charLevel"></span>
+              </div>
+              <div class="xp-bar-container">
+                <div class="xp-bar">
+                  <div class="xp-progress" id="xpProgress"></div>
+                </div>
+                <div class="xp-text">
+                  <span id="currentXP"></span> /
+                  <span id="nextLevelXP"></span> XP
+                </div>
+              </div>
+              <button id="addXPBtn" class="btn-xp">Add 50 XP</button>
+              <button id="reduceXPBtn" class="btn-xp btn-reduce">
+                Reduce 50 XP
+              </button>
+              <button id="backBtn" class="btn-secondary">
+                Back to Characters
+              </button>
             </div>
 
-            <div class="game-layout">
-                <!-- CHARACTER PANEL -->
-                <div class="panel character-display">
-                    <div class="character-portrait" id="charPortrait"></div>
-                    <div class="character-info">
-                        <div class="char-name" id="charName"></div>
-                        <div class="char-class" id="charClass"></div>
-                        <div class="char-description" id="charDescription"></div>
-                    </div>
-
-                    <div class="level-display">
-                        <div class="level-info">
-                            <span class="level-label">Level</span>
-                            <span class="level-number" id="charLevel"></span>
-                        </div>
-                        <div class="xp-bar-container">
-                            <div class="xp-bar">
-                                <div class="xp-progress" id="xpProgress"></div>
-                            </div>
-                            <div class="xp-text">
-                                <span id="currentXP"></span> / <span id="nextLevelXP"></span> XP
-                            </div>
-                        </div>
-                        <button id="addXPBtn" class="btn-xp">Add 50 XP</button>
-                        <button id="reduceXPBtn" class="btn-xp btn-reduce">Reduce 50 XP</button>
-                        <button id="backBtn" class="btn-secondary">Back to Characters</button>
-                    </div>
-
-                    <div class="stats-display">
-                        <h4>Stats</h4>
-                        <div id="statsContainer" class="stats-grid"></div>
-                    </div>
-                </div>
-
-                <!-- EQUIPMENT PANEL -->
-                <div class="panel equipment-display">
-                    <div class="filter-tabs">
-                        <div class="filter-tab active" data-filter="all">All</div>
-                        <div class="filter-tab" data-filter="1">Head</div>
-                        <div class="filter-tab" data-filter="2">Chest</div>
-                        <div class="filter-tab" data-filter="3">Legs</div>
-                        <div class="filter-tab" data-filter="4">Weapon</div>
-                        <div class="filter-tab" data-filter="5">Shield</div>
-                    </div>
-                    <div id="equipmentInventory" class="equipment-inventory"></div>
-                </div>
-
-                <!-- EQUIPPED ITEMS PANEL -->
-                <div class="panel">
-                    <h3>Equipped Items</h3>
-                    <div id="slot-1" class="equipment-slot"><div class="empty-slot">EMPTY</div></div>
-                    <div id="slot-2" class="equipment-slot"><div class="empty-slot">EMPTY</div></div>
-                    <div id="slot-3" class="equipment-slot"><div class="empty-slot">EMPTY</div></div>
-                    <div id="slot-4" class="equipment-slot"><div class="empty-slot">EMPTY</div></div>
-                    <div id="slot-5" class="equipment-slot"><div class="empty-slot">EMPTY</div></div>
-                </div>
+            <div class="stats-display">
+              <h4>Stats</h4>
+              <div id="statsContainer" class="stats-grid"></div>
             </div>
-        </section>
+          </div>
+
+          <!-- EQUIPMENT PANEL -->
+          <div class="panel equipment-display">
+            <div class="filter-tabs">
+              <div class="filter-tab active" data-filter="all">All</div>
+              <div class="filter-tab" data-filter="1">Head</div>
+              <div class="filter-tab" data-filter="2">Chest</div>
+              <div class="filter-tab" data-filter="3">Legs</div>
+              <div class="filter-tab" data-filter="4">Weapon</div>
+              <div class="filter-tab" data-filter="5">Shield</div>
+            </div>
+            <div id="equipmentInventory" class="equipment-inventory"></div>
+          </div>
+
+          <!-- EQUIPPED ITEMS PANEL -->
+          <div class="panel">
+            <h3>Equipped Items</h3>
+            <div id="slot-1" class="equipment-slot">
+              <div class="empty-slot">EMPTY</div>
+            </div>
+            <div id="slot-2" class="equipment-slot">
+              <div class="empty-slot">EMPTY</div>
+            </div>
+            <div id="slot-3" class="equipment-slot">
+              <div class="empty-slot">EMPTY</div>
+            </div>
+            <div id="slot-4" class="equipment-slot">
+              <div class="empty-slot">EMPTY</div>
+            </div>
+            <div id="slot-5" class="equipment-slot">
+              <div class="empty-slot">EMPTY</div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <!-- MODALS -->
     <div id="equipmentModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalItemName"></h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="modalItemIcon"></div>
-                <div>Slot: <span id="modalItemSlot"></span></div>
-                <div>Level: <span id="modalItemLevel"></span></div>
-                <div>Durability: <span id="modalItemDurability"></span></div>
-                <div id="modalItemBonuses"></div>
-            </div>
-            <div class="modal-footer">
-                <button id="modalEquipBtn" class="btn-primary">Equip</button>
-            </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalItemName"></h3>
+          <button class="modal-close">&times;</button>
         </div>
+        <div class="modal-body">
+          <div id="modalItemIcon"></div>
+          <div>Slot: <span id="modalItemSlot"></span></div>
+          <div>Level: <span id="modalItemLevel"></span></div>
+          <div>Durability: <span id="modalItemDurability"></span></div>
+          <div id="modalItemBonuses"></div>
+        </div>
+        <div class="modal-footer">
+          <button id="modalEquipBtn" class="btn-primary">Equip</button>
+        </div>
+      </div>
     </div>
 
     <div id="levelUpModal" class="modal level-up-modal">
-        <div class="modal-content level-up-content">
-            <div class="level-up-animation">
-                <div class="level-up-rays"></div>
-                <div class="level-up-text">
-                    <h2>Level Up!</h2>
-                    <div class="new-level" id="newLevelNum"></div>
-                    <div class="level-up-sparkles">✨✨✨</div>
-                </div>
-            </div>
+      <div class="modal-content level-up-content">
+        <div class="level-up-animation">
+          <div class="level-up-rays"></div>
+          <div class="level-up-text">
+            <h2>Level Up!</h2>
+            <div class="new-level" id="newLevelNum"></div>
+            <div class="level-up-sparkles">✨✨✨</div>
+          </div>
         </div>
+      </div>
     </div>
 
     <div id="deleteConfirmModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="deleteModalTitle">CONFIRM RESET</h3>
-                <button class="modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Permanently reset the character <strong id="deleteCharName"></strong>?</p>
-                <p style="color: var(--text-dim); margin-top: 1rem;">
-                    All progress, level, and XP will be lost. This action is irreversible and cannot be undone.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button id="cancelDeleteBtn" class="btn-secondary">CANCEL</button>
-                <button id="confirmDeleteBtn" class="btn-danger">RESET CHARACTER</button>
-            </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="deleteModalTitle">CONFIRM RESET</h3>
+          <button class="modal-close">&times;</button>
         </div>
+        <div class="modal-body">
+          <p>
+            Permanently reset the character
+            <strong id="deleteCharName"></strong>?
+          </p>
+          <p style="color: var(--text-dim); margin-top: 1rem">
+            All progress, level, and XP will be lost. This action is
+            irreversible and cannot be undone.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button id="cancelDeleteBtn" class="btn-secondary">CANCEL</button>
+          <button id="confirmDeleteBtn" class="btn-danger">
+            RESET CHARACTER
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- NOTIFICATION -->
@@ -155,15 +175,19 @@
     <div class="glitch-overlay"></div>
     <div class="scan-line"></div>
     <!-- SQL QUERY TERMINAL -->
-<div class="sql-terminal minimized" id="sqlTerminal">
-    <div class="sql-terminal-header" onclick="toggleSQLTerminal()">
+    <div class="sql-terminal minimized" id="sqlTerminal">
+      <div class="sql-terminal-header" onclick="toggleSQLTerminal()">
         <h4>SQL QUERY LOG</h4>
         <button class="sql-terminal-toggle">▼</button>
+      </div>
+      <div class="sql-terminal-body" id="sqlTerminalBody">
+        <div style="color: var(--text-dim)">Waiting for queries...</div>
+      </div>
+      <div class="sql-terminal-controls">
+        <span class="sql-query-count" id="sqlQueryCount">0 queries</span>
+        <button class="btn-clear-log" onclick="clearSQLLog()">Clear Log</button>
+      </div>
     </div>
-    <div class="sql-terminal-body" id="sqlTerminalBody">
-        <div style="color: var(--text-dim);">Waiting for queries...</div>
-    </div>
-</div>
     <script src="/js/game.js"></script>
-</body>
+  </body>
 </html>

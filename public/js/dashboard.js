@@ -116,27 +116,133 @@ async function handleLogout() {
 // SQL QUERY TERMINAL
 // ==========================================
 
+let terminalPolling = null;
+
 function toggleSQLTerminal() {
     const terminal = document.getElementById('sqlTerminal');
+    const wasMinimized = terminal.classList.contains('minimized');
     terminal.classList.toggle('minimized');
+    
+    if (wasMinimized) {
+        startSQLPolling();
+    } else {
+        stopSQLPolling();
+    }
 }
 
-function logSQLQuery(query) {
+function startSQLPolling() {
+    if (terminalPolling) return;
+    fetchSQLLog();
+    terminalPolling = setInterval(fetchSQLLog, 2000);
+}
+
+function stopSQLPolling() {
+    if (terminalPolling) {
+        clearInterval(terminalPolling);
+        terminalPolling = null;
+    }
+}
+
+async function fetchSQLLog() {
+    try {
+        const response = await fetch('/api/sql-log');
+        const data = await response.json();
+        
+        if (data.success && data.queries) {
+            displaySQLQueries(data.queries);
+        }
+    } catch (error) {
+        console.error('Error fetching SQL log:', error);
+    }
+}
+
+function displaySQLQueries(queries) {
     const terminalBody = document.getElementById('sqlTerminalBody');
-    const timestamp = new Date().toLocaleTimeString();
+    const countElement = document.getElementById('sqlQueryCount');
     
-    const entry = document.createElement('div');
-    entry.className = 'sql-query-entry';
-    entry.innerHTML = `
-        <div class="sql-query-timestamp">[${timestamp}]</div>
-        <div class="sql-query-text">${escapeHtml(query)}</div>
-    `;
+    if (queries.length === 0) {
+        terminalBody.innerHTML = '<div style="color: var(--text-dim); padding: 1rem;">No queries yet...</div>';
+        countElement.textContent = '0 queries';
+        return;
+    }
     
-    terminalBody.insertBefore(entry, terminalBody.firstChild);
+    // Group queries by API endpoint
+    const grouped = {};
+    queries.forEach(entry => {
+        const api = entry.api || 'Unknown API';
+        if (!grouped[api]) {
+            grouped[api] = [];
+        }
+        grouped[api].push(entry);
+    });
     
-    // Keep only last 50 queries
-    while (terminalBody.children.length > 50) {
-        terminalBody.removeChild(terminalBody.lastChild);
+    terminalBody.innerHTML = '';
+    
+    Object.entries(grouped).forEach(([api, apiQueries]) => {
+        const group = document.createElement('div');
+        group.className = 'sql-api-group';
+        
+        const header = document.createElement('div');
+        header.className = 'sql-api-header';
+        header.onclick = () => group.classList.toggle('collapsed');
+        header.innerHTML = `
+            <span class="sql-api-name">${escapeHtml(api)}</span>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <span class="sql-api-count">${apiQueries.length} ${apiQueries.length === 1 ? 'query' : 'queries'}</span>
+                <span class="sql-api-toggle">▼</span>
+            </div>
+        `;
+        
+        const queriesContainer = document.createElement('div');
+        queriesContainer.className = 'sql-api-queries';
+        
+        apiQueries.forEach(entry => {
+            const timestamp = new Date(entry.timestamp).toLocaleTimeString();
+            const div = document.createElement('div');
+            div.className = 'sql-query-entry';
+            
+            let paramStr = '';
+            if (entry.params && entry.params.length > 0) {
+                const params = entry.params.map(p => {
+                    if (typeof p === 'string') return `"${p}"`;
+                    if (p === null) return 'NULL';
+                    return String(p);
+                });
+                paramStr = `<div class="sql-query-params">PARAMS: [${params.join(', ')}]</div>`;
+            }
+            
+            div.innerHTML = `
+                <div class="sql-query-timestamp">[${timestamp}]</div>
+                <div class="sql-query-text">${escapeHtml(entry.query)}</div>
+                ${paramStr}
+            `;
+            
+            queriesContainer.appendChild(div);
+        });
+        
+        group.appendChild(header);
+        group.appendChild(queriesContainer);
+        terminalBody.appendChild(group);
+    });
+    
+    countElement.textContent = `${queries.length} ${queries.length === 1 ? 'query' : 'queries'}`;
+}
+
+async function clearSQLLog() {
+    try {
+        const response = await fetch('/api/sql-log/clear', {
+            method: 'POST'
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('SQL log cleared!', 'success');
+            fetchSQLLog(); // Refresh display
+        }
+    } catch (error) {
+        console.error('Error clearing SQL log:', error);
+        showNotification('Failed to clear log!', 'error');
     }
 }
 
@@ -148,15 +254,16 @@ function escapeHtml(text) {
         '"': '&quot;',
         "'": '&#039;'
     };
-    return text.replace(/[&<>"']/g, m => map[m]);
+    return String(text).replace(/[&<>"']/g, m => map[m]);
 }
 
-// Intercept fetch calls to log SQL queries
-const originalFetch = window.fetch;
-window.fetch = function(...args) {
-    const url = args[0];
-    if (typeof url === 'string' && url.startsWith('/api/')) {
-        logSQLQuery(`REQUEST: ${args[1]?.method || 'GET'} ${url}`);
+document.addEventListener('DOMContentLoaded', () => {
+    const terminal = document.getElementById('sqlTerminal');
+    if (terminal && !terminal.classList.contains('minimized')) {
+        startSQLPolling();
     }
-    return originalFetch.apply(this, args);
-};
+});
+
+window.addEventListener('beforeunload', () => {
+    stopSQLPolling();
+});
