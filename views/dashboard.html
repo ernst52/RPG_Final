@@ -129,12 +129,16 @@
     <script src="/js/dashboard.js"></script>
     <!-- SQL QUERY TERMINAL -->
     <div class="sql-terminal minimized" id="sqlTerminal">
-      <div class="sql-terminal-header" onclick="toggleSQLTerminal()">
-        <h4>SQL QUERY LOG</h4>
-        <button class="sql-terminal-toggle">▼</button>
+      <div class="sql-terminal-header">
+        <h4 onclick="toggleSQLTerminal()">SQL QUERY LOG</h4>
+        <button class="sql-terminal-toggle" onclick="toggleSQLTerminal()">
+          ▼
+        </button>
       </div>
       <div class="sql-terminal-body" id="sqlTerminalBody">
-        <div style="color: var(--text-dim)">Waiting for queries...</div>
+        <div style="color: var(--text-dim); padding: 1rem">
+          Waiting for queries...
+        </div>
       </div>
       <div class="sql-terminal-controls">
         <span class="sql-query-count" id="sqlQueryCount">0 queries</span>

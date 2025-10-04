@@ -166,6 +166,13 @@ function displaySQLQueries(queries) {
         return;
     }
     
+    // Store which groups are collapsed before redrawing
+    const collapsedGroups = new Set();
+    terminalBody.querySelectorAll('.sql-api-group.collapsed').forEach(group => {
+        const apiName = group.querySelector('.sql-api-name').textContent;
+        collapsedGroups.add(apiName);
+    });
+    
     // Group queries by API endpoint
     const grouped = {};
     queries.forEach(entry => {
@@ -182,9 +189,17 @@ function displaySQLQueries(queries) {
         const group = document.createElement('div');
         group.className = 'sql-api-group';
         
+        // Restore collapsed state
+        if (collapsedGroups.has(api)) {
+            group.classList.add('collapsed');
+        }
+        
         const header = document.createElement('div');
         header.className = 'sql-api-header';
-        header.onclick = () => group.classList.toggle('collapsed');
+        header.onclick = (e) => {
+            e.stopPropagation();
+            group.classList.toggle('collapsed');
+        };
         header.innerHTML = `
             <span class="sql-api-name">${escapeHtml(api)}</span>
             <div style="display: flex; gap: 1rem; align-items: center;">
